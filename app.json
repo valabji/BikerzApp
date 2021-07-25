@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "Bikerz",
+    "slug": "Bikerz",
+    "privacy": "public",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/Logo.png",
+    "scheme": "myapp",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "width":64,
+      "backgroundColor": "#fff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "bundleIdentifier": "com.valabji.bikerz",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.valabji.bikerz"
+    }
+  }
+}
