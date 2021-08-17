@@ -7,8 +7,11 @@
 //
 
 import React from "react"
-import { Image, StyleSheet, TouchableOpacity, Text, View } from "react-native"
+import { Image, StyleSheet, TouchableOpacity, Text, View, Alert } from "react-native"
 import * as Animatable from 'react-native-animatable';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Restart } from 'fiction-expo-restart';
+import { t } from "../../language";
 
 export default class Splash extends React.Component {
 
@@ -27,10 +30,15 @@ export default class Splash extends React.Component {
 	}
 
 	componentDidMount() {
+		// Alert.alert("Lang", "lang is : <" + global.lang + ">")
+		if (global.lang == "ar" || global.lang == "en") {
+			this.props.navigation.navigate('BotNav')
+		}
 
 	}
 
 	render() {
+
 
 		return <View
 			style={styles.viewView}>
@@ -52,7 +60,7 @@ export default class Splash extends React.Component {
 							justifyContent: "center"
 						}}>
 						<Image
-							source={require("./../../assets/images/group-1701.png")}
+							source={require("./../../assets/images/Logo.png")}
 							style={styles.group1701Image} />
 					</Animatable.View>
 				</Animatable.View>
@@ -61,14 +69,16 @@ export default class Splash extends React.Component {
 					delay={300}>
 					<TouchableOpacity
 						onPress={() => {
-							this.props.navigation.navigate('BotNav')
+							AsyncStorage.setItem('@lang', "ar")
+							Restart()
+							// this.props.navigation.navigate('BotNav')
 						}}
 						style={{ flexDirection: "row-reverse", marginTop: 96, }} >
 						<View style={{ backgroundColor: "#888", borderTopRightRadius: 12, borderBottomRightRadius: 12, width: 64, justifyContent: "center", alignItems: "center", height: 64 }}>
-							<Text style={{ fontSize: 48, color: "white", fontFamily: "Tajawal_400Regular" }}>ع</Text>
+							<Text style={{ fontSize: 48, includeFontPadding: false, color: "white", fontFamily: "Tajawal_400Regular" }}>ع</Text>
 						</View>
 						<View style={{ backgroundColor: "#444", borderTopLeftRadius: 12, borderBottomLeftRadius: 12, width: 200, justifyContent: "center", height: 64 }}>
-							<Text style={{ fontSize: 48, textAlign: "center", paddingRight: 10, color: "white", fontFamily: "Tajawal_400Regular" }}>عربي</Text>
+							<Text style={{ fontSize: 48, includeFontPadding: false, lineHeight: 48, textAlign: "center", paddingRight: 10, color: "white", fontFamily: "Tajawal_400Regular" }}>عربي</Text>
 						</View>
 					</TouchableOpacity>
 				</Animatable.View>
@@ -78,14 +88,16 @@ export default class Splash extends React.Component {
 					delay={600}>
 					<TouchableOpacity
 						onPress={() => {
-							this.props.navigation.navigate('BotNav')
+							AsyncStorage.setItem('@lang', "en")
+							Restart()
+							// this.props.navigation.navigate('BotNav')
 						}}
 						style={{ flexDirection: "row-reverse", marginTop: 32, }} >
 						<View style={{ backgroundColor: "#444", borderTopRightRadius: 12, borderBottomRightRadius: 12, width: 200, justifyContent: "center", height: 64 }}>
-							<Text style={{ fontSize: 48, textAlign: "center", paddingRight: 10, color: "white", fontFamily: "Poppins_400Regular" }}>English</Text>
+							<Text style={{ fontSize: 48, includeFontPadding: false, textAlign: "center", paddingRight: 10, color: "white", fontFamily: "Poppins_400Regular" }}>English</Text>
 						</View>
 						<View style={{ backgroundColor: "#888", borderTopLeftRadius: 12, borderBottomLeftRadius: 12, width: 64, justifyContent: "center", alignItems: "center", height: 64 }}>
-							<Text style={{ fontSize: 48, color: "white", fontFamily: "Poppins_400Regular" }}>E</Text>
+							<Text style={{ fontSize: 48, includeFontPadding: false, color: "white", fontFamily: "Poppins_400Regular" }}>E</Text>
 						</View>
 					</TouchableOpacity>
 				</Animatable.View>
@@ -107,11 +119,11 @@ const styles = StyleSheet.create({
 	},
 	group1701Image: {
 		// backgroundColor: "blue",
-		resizeMode: "center",
-		marginTop: -15,
-		marginLeft: -15,
-		width: 100,
-		height: 100,
+		resizeMode: "contain",
+		// marginTop: -15,
+		// marginLeft: -15,
+		width: 120,
+		height: 120,
 	},
 	brandShopText: {
 		backgroundColor: "transparent",

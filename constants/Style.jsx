@@ -17,6 +17,17 @@ export default StyleSheet.create({
     padding: SIZES.BASE * 4,
     backgroundColor: Colors.WHITE,
   },
+  shadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.18,
+    shadowRadius: 1.0,
+
+    elevation: 1,
+  },
   input: {
     padding: 10,
     paddingTop: 15,

@@ -6,34 +6,10 @@ import i18n from 'i18n-js';
 import Colors from '../constants/Colors';
 import { Ic_nounshoppingcart, Ic_noun_menu_1812743 } from './SVG';
 
-export default function CustomHeader({ title, logo, isHome, navigation }) {
+export default function CustomHeader({ title, logo, isHome, filter, navigation }) {
   return (
     <View style={{ flexDirection: 'row', height: 64, backgroundColor: Colors.WHITE }}>
-      {
-        isHome ?
-          <View style={{ flex: 1, justifyContent: 'center' }}>
-            <TouchableOpacity
-              onPress={() => navigation.toggleDrawer()}
-              style={{paddingLeft:20,}}
-            >
-              <Ic_noun_menu_1812743 />
-            </TouchableOpacity>
-          </View>
-          :
-          <View style={{ flex: 1, justifyContent: 'center' }}>
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-            >
-              <Feather
-                name="arrow-left"
-                size={30}
-                style={{ marginLeft: 5 }}
-                color="#222"
-              />
-            </TouchableOpacity>
-          </View>
-      }
-      <View style={{ flex: 1.5, justifyContent: 'center', alignItems: "center" }}>
+      <View style={{ justifyContent: 'center', alignItems: "center" }}>
         {/* <Text style={{ textAlign: 'center', fontFamily: "Cairo_400Regular", fontWeight: "500", fontSize: 18 }}>{title}</Text> */}
         <Image
           // source={require("../assets/images/Logo.png")}
@@ -47,12 +23,16 @@ export default function CustomHeader({ title, logo, isHome, navigation }) {
         />
       </View>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: "flex-end" }}>
-        <TouchableOpacity
-        // onPress={() => navigation.toggleDrawer()}
-        style={{paddingRight: 20}}
-        >
-          <Ic_nounshoppingcart />
-        </TouchableOpacity>
+        {
+          filter ?
+            <TouchableOpacity
+              style={{ paddingRight: 20 }}
+            >
+              <Feather name="filter" size={24} />
+            </TouchableOpacity>
+            :
+            <View />
+        }
       </View>
     </View>
   )

@@ -12,6 +12,7 @@ import Screen2 from "../screens/Screen2";
 // import Shop from "../BScreens/Shop/Shop";
 // import Item from "../BScreens/Item/Item";
 import Screen3 from "../screens/Screen3";
+import AddOffers from "../screens/AddOffer";
 import Colors from "../constants/Colors";
 // import Account from "../BScreens/Account/Account";
 // import Home from "../BScreens/Home/Home";
@@ -294,15 +295,33 @@ export default function NestedNavigations() {
         <BottomTab.Navigator
           initialRouteName={INITIAL_ROUTE_NAME}
           tabBarOptions={{
-            activeBackgroundColor: Colors.BGray,
-            inactiveBackgroundColor: Colors.BGray,
+            // activeBackgroundColor: Colors.BGray,
+            // inactiveBackgroundColor: Colors.BGray,
             tabStyle: {
-              paddingTop: 10,
+              // paddingTop: 10,
               // marginTop:10,
+              height: 60,
+              // backgroundColor:"red"
             },
+
+            showLabel: false,
             style: {
               // borderTopWidth: 0,
-              height: 100,
+              height: 60,
+              position: "absolute",
+              bottom: 25,
+              left: 20,
+              right: 20,
+
+              borderColor: Colors.DGray,
+              borderTopColor: Colors.DGray,
+              borderWidth: 0.25,
+
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "#fff",
+              borderRadius: 15,
+              ...styles.shadow,
             },
           }}
         >
@@ -311,26 +330,29 @@ export default function NestedNavigations() {
             component={HomeScreen}
             // component={Home}
             options={{
-              tabBarLabel: ({ focused }) => {
-                return <View />;
-              },
               tabBarIcon: ({ focused }) => {
                 return (
-                  <View style={{ width: 80, alignItems: "center" }}>
-                    {/* <Entypo
-                    name="shop"
-                    size={24}
-                    color={focused ? Colors.DYellow : Colors.DGray}
-                  /> */}
-                    {focused ? <Ic_shopbaryellow /> : <Ic_shopbar />}
-                    <Text
+                  <View
+                    style={{
+                      width: 80,
+                      height: 60,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Ionicons
+                      name="home"
+                      size={32}
+                      color={focused ? Colors.BGreen : Colors.DGray}
+                    />
+                    {/* <Text
                       style={{
                         fontFamily: "Cairo_400Regular",
-                        color: focused ? Colors.DYellow : Colors.DGray,
+                        color: focused ? Colors.BGreen : Colors.DGray,
                       }}
                     >
                       Home
-                    </Text>
+                    </Text> */}
                   </View>
                 );
               },
@@ -341,26 +363,36 @@ export default function NestedNavigations() {
             component={HomeScreen2}
             // component={Screen2}
             options={{
-              tabBarLabel: ({ focused }) => {
-                return <View />;
-              },
               tabBarIcon: ({ focused }) => {
                 return (
-                  <View style={{ width: 80, alignItems: "center" }}>
-                    {/*  <Feather
-                    name="grid"
-                    size={24}
-                    color={focused ? Colors.DYellow : Colors.DGray}
-                  /> */}
-                    {focused ? <Ic_categorybaryellow /> : <Ic_categorybar />}
-                    <Text
+                  <View
+                    style={{
+                      width: 80,
+                      height: 60,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <View
                       style={{
-                        fontFamily: "Cairo_400Regular",
-                        color: focused ? Colors.DYellow : Colors.DGray,
+                        paddingTop: 5,
+                        paddingBottom: 4,
+                        paddingLeft: 7,
+                        paddingRight: 7,
+                        borderRadius: 10,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: focused ? Colors.BGreen : Colors.DGray,
                       }}
                     >
-                      Categories
-                    </Text>
+                      <Text
+                        style={{
+                          color: Colors.BGray,
+                        }}
+                      >
+                        V.I.P
+                      </Text>
+                    </View>
                   </View>
                 );
               },
@@ -368,29 +400,47 @@ export default function NestedNavigations() {
           />
           <BottomTab.Screen
             name="Sc3"
-            component={Shoppz}
+            component={AddOffers}
             options={{
-              tabBarLabel: ({ focused }) => {
-                return <View />;
-              },
               tabBarIcon: ({ focused }) => {
                 return (
-                  <View style={{ width: 80, alignItems: "center" }}>
-                    <Feather
-                      name="shopping-bag"
-                      size={24}
-                      color={focused ? Colors.DYellow : Colors.DGray}
-                    />
-                    {/* {focused ? <Discount /> : <DiscountOff />} */}
-                    <Text
+                  <View
+                    style={{
+                      width: 80,
+                      height: 60,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Ionicons name="add" size={32} color={Colors.WHITE} />
+                  </View>
+                );
+              },
+              tabBarButton: (p) => {
+                return (
+                  <TouchableOpacity
+                    onPress={p.onPress}
+                    style={{
+                      top: -10,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      ...styles.shadow,
+                    }}
+                  >
+                    <View
                       style={{
-                        fontFamily: "Cairo_400Regular",
-                        color: focused ? Colors.DYellow : Colors.DGray,
+                        width: 60,
+                        height: 60,
+                        borderRadius: 30,
+
+                        borderColor: Colors.DGray,
+                        borderWidth: 0.25,
+                        backgroundColor: Colors.BGreen,
                       }}
                     >
-                      Brands
-                    </Text>
-                  </View>
+                      {p.children}
+                    </View>
+                  </TouchableOpacity>
                 );
               },
             }}
@@ -399,27 +449,21 @@ export default function NestedNavigations() {
             name="Sc4"
             component={Screen3}
             options={{
-              tabBarLabel: ({ focused }) => {
-                return <View />;
-              },
               tabBarIcon: ({ focused }) => {
                 return (
-                  <View style={{ width: 80, alignItems: "center" }}>
-                    {/* <MaterialCommunityIcons
-                    name="bitcoin"
-                    size={24}
-                    style={{ paddingTop: 5, paddingBottom: 2 }}
-                    color={focused ? Colors.DYellow : Colors.DGray}
-                  /> */}
-                    {focused ? <Ic_cartbaryellow /> : <Ic_cartbar />}
-                    <Text
-                      style={{
-                        fontFamily: "Cairo_400Regular",
-                        color: focused ? Colors.DYellow : Colors.DGray,
-                      }}
-                    >
-                      My Cart
-                    </Text>
+                  <View
+                    style={{
+                      width: 80,
+                      height: 60,
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Ionicons
+                      name="heart"
+                      size={32}
+                      color={focused ? Colors.BGreen : Colors.DGray}
+                    />
                   </View>
                 );
               },
@@ -429,28 +473,28 @@ export default function NestedNavigations() {
             name="Sc5"
             component={Accountz}
             options={{
-              tabBarLabel: ({ focused }) => {
-                return <View />;
-              },
-              tabBarIcon: ({ focused }) => {
+              tabBarButton: (p) => {
                 return (
-                  <View style={{ width: 80, alignItems: "center" }}>
-                    {/* <MaterialCommunityIcons
-                    name="diamond"
-                    size={24}
-                    style={{ paddingTop: 5, paddingBottom: 2 }}
-                    color={focused ? Colors.DYellow : Colors.DGray}
-                  /> */}
-                    {focused ? <Ic_profilebaryellow /> : <Ic_profilebar />}
-                    <Text
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (global.logedin) {
+                        navigation.openDrawer();
+                      } else {
+                        navigation.navigate("Login");
+                      }
+                    }}
+                  >
+                    <View
                       style={{
-                        fontFamily: "Cairo_400Regular",
-                        color: focused ? Colors.DYellow : Colors.DGray,
+                        width: 80,
+                        height: 60,
+                        justifyContent: "center",
+                        alignItems: "center",
                       }}
                     >
-                      Me
-                    </Text>
-                  </View>
+                      <Ionicons name="person" size={32} color={Colors.DGray} />
+                    </View>
+                  </TouchableOpacity>
                 );
               },
             }}
@@ -497,12 +541,12 @@ export default function NestedNavigations() {
       <LinearGradient
         style={{ flex: 1 }}
         locations={["0%", "20%"]}
-        colors={["#000", "#fff"]}
+        colors={["#000", "#000"]}
       >
         <Drawer.Navigator
           drawerType="slide"
           overlayColor="transparent"
-          drawerPosition="left"
+          drawerPosition={global.lang == "ar" ? "right" : "left"}
           drawerStyle={{
             flex: 1,
             width: 250,
@@ -555,7 +599,15 @@ export default function NestedNavigations() {
                         alignItems: "flex-start",
                       }}
                     >
-                      <View style={{ backgroundColor: "white",width:250,paddingTop: 15,paddingBottom:15,borderBottomRightRadius:15 }}>
+                      <View
+                        style={{
+                          backgroundColor: "white",
+                          width: 250,
+                          paddingTop: 15,
+                          paddingBottom: 15,
+                          borderBottomRightRadius: 15,
+                        }}
+                      >
                         {/* <Text style={styles.brandShopText}>BRAND {"\n"}SHOP</Text> */}
                         <Image
                           // source={require("../assets/images/Logo.png")}
@@ -627,7 +679,7 @@ export default function NestedNavigations() {
                         }}
                       />
                       <Text style={styles.womenClothingMenText}>
-                        Women Clothing
+                        Reserved for later
                       </Text>
                     </View>
                     <View
@@ -645,7 +697,7 @@ export default function NestedNavigations() {
                         }}
                       />
                       <Text style={styles.womenClothingMenText}>
-                        Women Clothing
+                        Reserved for later
                       </Text>
                     </View>
                     <View
@@ -663,7 +715,7 @@ export default function NestedNavigations() {
                         }}
                       />
                       <Text style={styles.womenClothingMenText}>
-                        Women Clothing
+                        Reserved for later
                       </Text>
                     </View>
                     <View
@@ -681,7 +733,7 @@ export default function NestedNavigations() {
                         }}
                       />
                       <Text style={styles.womenClothingMenText}>
-                        Women Clothing
+                        Reserved for later
                       </Text>
                     </View>
                     <View
@@ -699,7 +751,7 @@ export default function NestedNavigations() {
                         }}
                       />
                       <Text style={styles.womenClothingMenText}>
-                        Women Clothing
+                        Reserved for later
                       </Text>
                     </View>
                     <View
@@ -717,10 +769,15 @@ export default function NestedNavigations() {
                         }}
                       />
                       <Text style={styles.womenClothingMenText}>
-                        Women Clothing
+                        Reserved for later
                       </Text>
                     </View>
-                    <View
+                    <TouchableOpacity
+                      onPress={() => {
+                        global.logedin = false;
+                        global.token = "";
+                        navigation.closeDrawer();
+                      }}
                       style={{
                         flexDirection: "row",
                         paddingTop: 15,
@@ -728,16 +785,14 @@ export default function NestedNavigations() {
                       }}
                     >
                       <Feather
-                        name="chevron-right"
+                        name="log-out"
                         size={24}
                         style={{
                           marginLeft: 10,
                         }}
                       />
-                      <Text style={styles.womenClothingMenText}>
-                        Women Clothing
-                      </Text>
-                    </View>
+                      <Text style={styles.womenClothingMenText}>Log Out</Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
                 {/* <Image

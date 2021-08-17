@@ -9,13 +9,14 @@ import {
   StyleSheet,
   View,
   SafeAreaView,
+  Alert,
   TouchableOpacity,
   ActivityIndicator,
   KeyboardAvoidingView,
 } from 'react-native';
 import styles, { SIZES } from '../constants/Style';
 import Ti from '../components/TextInput';
-
+import { post } from '../network';
 /* const Colors = {
   BLACK: '#000',
   BLACK: '#FFF',
@@ -25,32 +26,36 @@ import Ti from '../components/TextInput';
 
 export default function Main({ navigation }) {
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = useCallback(async () => {
-    setLoading(true);
-    if ("1234".match(password)) {
-      global.logedin = true
-      navigation.dispatch(StackActions.replace('BotNav'))
-    } else {
-      alert("Wrong password for user " + email)
+    if (!loading) {
+      setLoading(true);
+      post('/users/login', { phone: phone, password: password }).then(r => {
+        if (r.ok) {
+          global.logedin = true
+          navigation.dispatch(StackActions.replace('BotNav'))
+        } else {
+          Alert.alert("Error", "Wrong phone / password ")
+        }
+        setLoading(false);
+      })
     }
-    setLoading(false);
   });
 
   const renderInputs = () => {
     return (
       <View style={{ flex: 1 }}>
         <View style={styles.inputContainer}>
-          <Ionicons name="mail" size={18} color={Colors.DGray} />
+          <Ionicons name="call" size={18} color={Colors.DGray} />
           <TextInput
-            value={email}
-            placeholder="Email"
+            value={phone}
+            placeholder="Phone Number"
             style={styles.input}
             placeholderTextColor={Colors.BLACK}
-            onChangeText={value => setEmail(value)}
+            onChangeText={value => setPhone(value)}
           />
         </View>
         <View style={styles.inputContainer}>
@@ -88,9 +93,9 @@ export default function Main({ navigation }) {
           )}
         </TouchableOpacity>
 
-        <TouchableOpacity 
-        onPress={() => alert("Go to 'Forgot Password' screen")}
-        style={{alignSelf:"center"}}
+        <TouchableOpacity
+          onPress={() => Alert.alert("", "Go to 'Forgot Password' screen")}
+          style={{ alignSelf: "center" }}
         >
           <Text
             style={{
@@ -103,9 +108,9 @@ export default function Main({ navigation }) {
             Forgot password ?
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity 
-        onPress={() => navigation.navigate("Register")}
-        style={{alignSelf:"center"}}
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Register")}
+          style={{ alignSelf: "center" }}
         >
           <Text
             style={{
@@ -115,7 +120,7 @@ export default function Main({ navigation }) {
               fontSize: SIZES.FONT2,
               marginTop: SIZES.PADDING * 2,
             }}>
-            Don't have an account ? <Text style={{fontWeight:"500"}}>SIGN UP</Text>
+            Don't have an account ? <Text style={{ fontWeight: "500" }}>SIGN UP</Text>
           </Text>
         </TouchableOpacity>
       </View>

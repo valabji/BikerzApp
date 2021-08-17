@@ -13,9 +13,11 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   ScrollView,
+  Alert,
 } from 'react-native';
 import styles, { SIZES } from '../constants/Style';
 import Ti from '../components/TextInput';
+import { post } from '../network';
 
 /* const Colors = {
   BLACK: '#000',
@@ -26,43 +28,87 @@ import Ti from '../components/TextInput';
 
 export default function Main({ navigation }) {
   const [loading, setLoading] = useState(false);
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = useCallback(async () => {
-    setLoading(true);
-    if ("1234".match(password)) {
-      navigation.dispatch(StackActions.replace('BotNav'))
-    } else {
-      alert("Wrong password for user " + email)
+    // setLoading(false);
+
+    if (!loading) {
+      if (firstname == "") {
+        Alert.alert("Error", "Please enter your first name")
+        return null
+      }
+      if (lastname == "") {
+        Alert.alert("Error", "Please enter your last name")
+        return null
+      }
+      if (email == "") {
+        Alert.alert("Error", "Please enter your email")
+        return null
+      }
+      if (phone == "") {
+        Alert.alert("Error", "Please enter your phone number")
+        return null
+      }
+      if (password == "") {
+        Alert.alert("Error", "Please enter your password")
+        return null
+      }
+
+      if (password != password2) {
+        Alert.alert("Error", "Passwords must be the same")
+        return null
+      }
+
+      setLoading(true);
+      post('/users', {
+        phone: phone,
+        password: password,
+        email: email,
+        name: firstname + " " + lastname
+      }).then(r => {
+        console.log(r.ok)
+        if (r.ok) {
+          global.logedin = true
+          Alert.alert("Success", "your user has been created!")
+          navigation.dispatch(StackActions.replace('BotNav'))
+        } else {
+          Alert.alert("Error", "phone number already exist!")
+        }
+        setLoading(false);
+      })
     }
-    setLoading(false);
   });
 
   const renderInputs = () => {
     return (
       <View style={{ flex: 1 }}>
 
-<View style={styles.inputContainer}>
+        <View style={styles.inputContainer}>
           <Ionicons name="person" size={18} color={Colors.DGray} />
           <TextInput
-            value={email}
+            value={firstname}
             placeholder="First name"
             style={styles.input}
             placeholderTextColor={Colors.BLACK}
-            onChangeText={value => setEmail(value)}
+            onChangeText={value => setFirstname(value)}
           />
         </View>
 
         <View style={styles.inputContainer}>
           <Ionicons name="person" size={18} color={Colors.DGray} />
           <TextInput
-            value={email}
+            value={lastname}
             placeholder="Last name"
             style={styles.input}
             placeholderTextColor={Colors.BLACK}
-            onChangeText={value => setEmail(value)}
+            onChangeText={value => setLastname(value)}
           />
         </View>
 
@@ -80,11 +126,11 @@ export default function Main({ navigation }) {
         <View style={styles.inputContainer}>
           <Ionicons name="phone-portrait" size={18} color={Colors.DGray} />
           <TextInput
-            value={email}
+            value={phone}
             placeholder="Mobile Number"
             style={styles.input}
             placeholderTextColor={Colors.BLACK}
-            onChangeText={value => setEmail(value)}
+            onChangeText={value => setPhone(value)}
           />
         </View>
 
@@ -118,12 +164,12 @@ export default function Main({ navigation }) {
         <View style={styles.inputContainer}>
           <Ionicons name="lock-closed-outline" size={18} color={Colors.DGray} />
           <TextInput
-            value={password}
+            value={password2}
             style={styles.input}
             placeholder="Re-type Password"
             placeholderTextColor={Colors.BLACK}
             secureTextEntry={!showPassword}
-            onChangeText={value => setPassword(value)}
+            onChangeText={value => setPassword2(value)}
           />
           <TouchableOpacity
             style={{
@@ -142,7 +188,7 @@ export default function Main({ navigation }) {
             />
           </TouchableOpacity>
         </View>
-        
+
         <TouchableOpacity activeOpacity={0.8} style={styles.signin} onPress={() => handleLogin()}>
           {loading ? (
             <ActivityIndicator size={SIZES.FONT2} color={Colors.WHITE} />
@@ -151,20 +197,20 @@ export default function Main({ navigation }) {
           )}
         </TouchableOpacity>
 
-<TouchableOpacity 
-        onPress={() => navigation.navigate("Login")}
-        style={{alignSelf:"center"}}
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Login")}
+          style={{ alignSelf: "center" }}
         >
           <Text
             style={{
               textAlign: 'right',
               fontWeight: '300',
-              marginBottom:200,
+              marginBottom: 200,
               color: Colors.BLACK,
               fontSize: SIZES.FONT2,
               marginTop: SIZES.PADDING * 2,
             }}>
-            Have an account ? <Text style={{fontWeight:"500"}}>LOGIN</Text>
+            Have an account ? <Text style={{ fontWeight: "500" }}>LOGIN</Text>
           </Text>
         </TouchableOpacity>
       </View>
@@ -174,7 +220,7 @@ export default function Main({ navigation }) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={styles.container}>
-        <View style={{ flex: 0.5, justifyContent: 'center',marginTop:40,marginBottom:40 }}>
+        <View style={{ flex: 0.5, justifyContent: 'center', marginTop: 40, marginBottom: 40 }}>
           <Text style={styles.title}>Create</Text>
           <Text style={styles.title2}>A NEW ACCOUNT</Text>
         </View>
