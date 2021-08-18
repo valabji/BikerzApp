@@ -6,7 +6,7 @@ import i18n from 'i18n-js';
 import Colors from '../constants/Colors';
 import { Ic_nounshoppingcart, Ic_noun_menu_1812743 } from './SVG';
 
-export default function CustomHeader({ title, logo, isHome, filter, navigation }) {
+export default function CustomHeader({ title, logo, isHome,filter, left, navigation }) {
   return (
     <View style={{ flexDirection: 'row', height: 64, backgroundColor: Colors.WHITE }}>
       <View style={{ justifyContent: 'center', alignItems: "center" }}>
@@ -24,14 +24,24 @@ export default function CustomHeader({ title, logo, isHome, filter, navigation }
       </View>
       <View style={{ flex: 1, justifyContent: 'center', alignItems: "flex-end" }}>
         {
-          filter ?
+          left == "filter" ?
             <TouchableOpacity
+              onPress={filter}
               style={{ paddingRight: 20 }}
             >
               <Feather name="filter" size={24} />
             </TouchableOpacity>
-            :
-            <View />
+            : left == "back" ?
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.goBack()
+                }}
+                style={{ paddingRight: 20 }}
+              >
+                <Feather name="arrow-left" size={24} />
+              </TouchableOpacity>
+              :
+              <View />
         }
       </View>
     </View>

@@ -7,6 +7,8 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import TabBarIcon from "../components/TabBarIcon";
 import HomeScreen from "../screens/HomeScreen";
 import HomeScreen2 from "../screens/HomeScreen2";
+import Offer from "../screens/Offer";
+import Profile from "../screens/Profile";
 import Screen2 from "../screens/Screen2";
 // import Shops from "../BScreens/Shops/Shops";
 // import Shop from "../BScreens/Shop/Shop";
@@ -98,6 +100,9 @@ import Categories from "../BScreens/Shops/Categories";
 // TScreen = Shops
 import Splash from "../BScreens/Splash/Splash";
 import Lang from "../BScreens/Splash/Lang";
+import { baseurl } from "../network";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Restart } from "fiction-expo-restart";
 // TScreen = Splash
 
 const BottomTab = createBottomTabNavigator();
@@ -271,6 +276,40 @@ export default function NestedNavigations() {
     );
   }
 
+  function HomeStack() {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{
+            title: "",
+            headerShown: false,
+            headerStyle: { backgroundColor: "#ddd" },
+          }}
+        />
+        <Stack.Screen
+          name="Offer"
+          component={Offer}
+          options={{
+            title: "",
+            headerShown: false,
+            headerStyle: { backgroundColor: "#ddd" },
+          }}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={Profile}
+          options={{
+            title: "",
+            headerShown: false,
+            headerStyle: { backgroundColor: "#ddd" },
+          }}
+        />
+      </Stack.Navigator>
+    );
+  }
+
   function BottomTabNavigation({ navigation, style }) {
     return (
       <Animated.View
@@ -327,7 +366,7 @@ export default function NestedNavigations() {
         >
           <BottomTab.Screen
             name="Main"
-            component={HomeScreen}
+            component={HomeStack}
             // component={Home}
             options={{
               tabBarIcon: ({ focused }) => {
@@ -419,7 +458,16 @@ export default function NestedNavigations() {
               tabBarButton: (p) => {
                 return (
                   <TouchableOpacity
-                    onPress={p.onPress}
+                    onPress={() => {
+                      if (global.token == "") {
+                        Alert.alert(
+                          "Users Only!",
+                          "Please login to add offers"
+                        );
+                      } else {
+                        p.onPress();
+                      }
+                    }}
                     style={{
                       top: -10,
                       justifyContent: "center",
@@ -467,6 +515,33 @@ export default function NestedNavigations() {
                   </View>
                 );
               },
+              tabBarButton: (p) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (global.token == "") {
+                        Alert.alert(
+                          "Users Only!",
+                          "Please login to view your favorites"
+                        );
+                      } else {
+                        p.onPress();
+                      }
+                    }}
+                  >
+                    <View
+                      style={{
+                        width: 80,
+                        height: 60,
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      {p.children}
+                    </View>
+                  </TouchableOpacity>
+                );
+              },
             }}
           />
           <BottomTab.Screen
@@ -477,7 +552,7 @@ export default function NestedNavigations() {
                 return (
                   <TouchableOpacity
                     onPress={() => {
-                      if (global.logedin) {
+                      if (global.token != "") {
                         navigation.openDrawer();
                       } else {
                         navigation.navigate("Login");
@@ -628,13 +703,13 @@ export default function NestedNavigations() {
                           height: 90,
                           marginTop: 20,
                           marginBottom: 20,
-                          marginLeft: 25,
+                          marginLeft: 10,
                           flexDirection: "row",
                           alignItems: "flex-start",
                         }}
                       >
                         <Image
-                          source={require("./../assets/images/avatar-2.png")}
+                          source={{ uri: baseurl + global.avatar }}
                           style={styles.avatarImage}
                         />
                         <View
@@ -646,10 +721,10 @@ export default function NestedNavigations() {
                           }}
                         >
                           <Text style={styles.solimanAhmedText}>
-                            Soliman Ali
+                            {global.fullname}
                           </Text>
                           <Text style={styles.solimanGmailComText}>
-                            Soliman@gmail.com
+                            {global.email}
                           </Text>
                         </View>
                       </View>
@@ -664,119 +739,99 @@ export default function NestedNavigations() {
                       paddingTop: 15,
                     }}
                   >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        paddingTop: 15,
-                        paddingBottom: 15,
-                      }}
-                    >
-                      <Feather
-                        name="chevron-right"
-                        size={24}
-                        style={{
-                          marginLeft: 10,
-                        }}
-                      />
-                      <Text style={styles.womenClothingMenText}>
-                        Reserved for later
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        paddingTop: 15,
-                        paddingBottom: 15,
-                      }}
-                    >
-                      <Feather
-                        name="chevron-right"
-                        size={24}
-                        style={{
-                          marginLeft: 10,
-                        }}
-                      />
-                      <Text style={styles.womenClothingMenText}>
-                        Reserved for later
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        paddingTop: 15,
-                        paddingBottom: 15,
-                      }}
-                    >
-                      <Feather
-                        name="chevron-right"
-                        size={24}
-                        style={{
-                          marginLeft: 10,
-                        }}
-                      />
-                      <Text style={styles.womenClothingMenText}>
-                        Reserved for later
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        paddingTop: 15,
-                        paddingBottom: 15,
-                      }}
-                    >
-                      <Feather
-                        name="chevron-right"
-                        size={24}
-                        style={{
-                          marginLeft: 10,
-                        }}
-                      />
-                      <Text style={styles.womenClothingMenText}>
-                        Reserved for later
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        paddingTop: 15,
-                        paddingBottom: 15,
-                      }}
-                    >
-                      <Feather
-                        name="chevron-right"
-                        size={24}
-                        style={{
-                          marginLeft: 10,
-                        }}
-                      />
-                      <Text style={styles.womenClothingMenText}>
-                        Reserved for later
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        paddingTop: 15,
-                        paddingBottom: 15,
-                      }}
-                    >
-                      <Feather
-                        name="chevron-right"
-                        size={24}
-                        style={{
-                          marginLeft: 10,
-                        }}
-                      />
-                      <Text style={styles.womenClothingMenText}>
-                        Reserved for later
-                      </Text>
-                    </View>
                     <TouchableOpacity
-                      onPress={() => {
-                        global.logedin = false;
+                      onPress={() => {}}
+                      style={{
+                        flexDirection: "row",
+                        paddingTop: 15,
+                        paddingBottom: 15,
+                      }}
+                    >
+                      <Feather
+                        name="user"
+                        size={24}
+                        style={{
+                          marginLeft: 10,
+                        }}
+                      />
+                      <Text style={styles.womenClothingMenText}>
+                        My Profile
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => {}}
+                      style={{
+                        flexDirection: "row",
+                        paddingTop: 15,
+                        paddingBottom: 15,
+                      }}
+                    >
+                      <Feather
+                        name="edit"
+                        size={24}
+                        style={{
+                          marginLeft: 10,
+                        }}
+                      />
+                      <Text style={styles.womenClothingMenText}>
+                        Account
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        flexDirection: "row",
+                        paddingTop: 15,
+                        paddingBottom: 15,
+                      }}
+                    >
+                      <Feather
+                        name="settings"
+                        size={24}
+                        style={{
+                          marginLeft: 10,
+                        }}
+                      />
+                      <Text style={styles.womenClothingMenText}>Settings</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        flexDirection: "row",
+                        paddingTop: 15,
+                        paddingBottom: 15,
+                      }}
+                    >
+                      <Feather
+                        name="phone-call"
+                        size={24}
+                        style={{
+                          marginLeft: 10,
+                        }}
+                      />
+                      <Text style={styles.womenClothingMenText}>
+                        Contact Us
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        flexDirection: "row",
+                        paddingTop: 15,
+                        paddingBottom: 15,
+                      }}
+                    >
+                      <Feather
+                        name="info"
+                        size={24}
+                        style={{
+                          marginLeft: 10,
+                        }}
+                      />
+                      <Text style={styles.womenClothingMenText}>About</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={async () => {
                         global.token = "";
-                        navigation.closeDrawer();
+                        await AsyncStorage.removeItem("@token");
+                        Restart();
                       }}
                       style={{
                         flexDirection: "row",

@@ -14,7 +14,7 @@ export async function get(url) {
         method: "GET",
         headers: {
             Accept: "application/json; charset=utf-8", "Access-Control-Allow-Origin": "*", "e_platform": "mobile",
-            Authorization: 'Bearer ' + global.token
+            "x-access-token": global.token
         }
     })
         .then((response) => response.json().then(res => data = res))
@@ -34,7 +34,7 @@ export async function post(url, data) {
         headers: {
             Accept: "application/json; charset=utf-8", "Access-Control-Allow-Origin": "*", "e_platform": "mobile",
             'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + global.token
+            "x-access-token": global.token
         }
     })
         // .then((response) => response.json().then(res => data = res))
@@ -86,7 +86,7 @@ export async function patch(url, data) {
         headers: {
             Accept: "application/json; charset=utf-8", "Access-Control-Allow-Origin": "*", "e_platform": "mobile",
             'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + global.token
+            "x-access-token": global.token
         }
     })
         .then((response) => response.json().then(res => data = res))
@@ -103,7 +103,7 @@ export async function remove(url) {
             method: "DELETE",
             headers: {
                 Accept: "application/json; charset=utf-8", "Access-Control-Allow-Origin": "*", "e_platform": "mobile",
-                Authorization: 'Bearer ' + global.token
+                "x-access-token": global.token
             }
         })
             .then((response) => response.json().then(res => data = res))

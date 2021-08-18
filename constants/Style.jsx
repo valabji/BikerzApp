@@ -1475,8 +1475,9 @@ export default StyleSheet.create({
     marginLeft: 96,
   },
   avatarImage: {
-    resizeMode: "center",
+    resizeMode: "cover",
     backgroundColor: "transparent",
+    borderRadius:45,
     width: 90,
     height: 90,
   },
@@ -1487,7 +1488,7 @@ export default StyleSheet.create({
     fontStyle: "normal",
     fontWeight: "normal",
     textAlign: "left",
-    backgroundColor: "transparent",
+    width:130,
   },
   line28View: {
     backgroundColor: "rgb(112, 112, 112)",
@@ -1517,6 +1518,7 @@ export default StyleSheet.create({
     fontStyle: "normal",
     fontWeight: "normal",
     textAlign: "left",
+    width:130,
     backgroundColor: "transparent",
     // position: "absolute",
     // alignSelf: "center",

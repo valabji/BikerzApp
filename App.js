@@ -107,7 +107,15 @@ export default function App(props) {
     const f = async () => {
       try {
         const lang = await AsyncStorage.getItem('@lang') || "new"
+        global.token = await AsyncStorage.getItem("@token") || ""
+        global.fullname = await AsyncStorage.getItem("@fullname") || ""
+        global.uid = await AsyncStorage.getItem("@uid") || ""
+        global.avatar = await AsyncStorage.getItem("@avatar") || ""
+        global.email = await AsyncStorage.getItem("@email") || ""
+        global.phone = await AsyncStorage.getItem("@phone") || ""
+        const test = await AsyncStorage.getItem("@token")
         global.lang = lang
+        
         langinit()
         // AsyncStorage.clear('@lang')
       } catch (e) {

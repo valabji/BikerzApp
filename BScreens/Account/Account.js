@@ -33,7 +33,7 @@ export default class Account extends React.Component {
 	}
 
 	render() {
-		if (!global.logedin) {
+		if (global.token != "") {
 			this.props.navigation.navigate('Login')
 		}
 		return <View

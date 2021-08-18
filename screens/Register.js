@@ -75,9 +75,8 @@ export default function Main({ navigation }) {
       }).then(r => {
         console.log(r.ok)
         if (r.ok) {
-          global.logedin = true
           Alert.alert("Success", "your user has been created!")
-          navigation.dispatch(StackActions.replace('BotNav'))
+          navigation.navigate("Login")
         } else {
           Alert.alert("Error", "phone number already exist!")
         }
@@ -205,12 +204,28 @@ export default function Main({ navigation }) {
             style={{
               textAlign: 'right',
               fontWeight: '300',
-              marginBottom: 200,
               color: Colors.BLACK,
               fontSize: SIZES.FONT2,
               marginTop: SIZES.PADDING * 2,
             }}>
             Have an account ? <Text style={{ fontWeight: "500" }}>LOGIN</Text>
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Home")}
+          style={{ alignSelf: "center" }}
+        >
+          <Text
+            style={{
+              textAlign: 'right',
+              fontWeight: '300',
+              marginBottom: 200,
+              color: Colors.DGray,
+              fontSize: SIZES.FONT2,
+              marginTop: SIZES.PADDING * 2,
+            }}>
+            <Feather name="chevrons-left" /> skip
           </Text>
         </TouchableOpacity>
       </View>

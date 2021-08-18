@@ -1,13 +1,14 @@
 import * as React from 'react';
 import CustomHeader from '../components/CHeader'
-import { Text, View, SafeAreaView, Image, ActivityIndicator, TouchableOpacity, TextInput, Dimensions, ScrollView } from 'react-native'
+import { Text, View, SafeAreaView, Image, RefreshControl, ActivityIndicator, TouchableOpacity, TextInput, Dimensions, ScrollView, Alert } from 'react-native'
 import { StackActions } from '@react-navigation/native';
 import Fonts from '../constants/Fonts';
 import styles, { SIZES } from '../constants/Style';
-import { Feather, Ionicons } from '@expo/vector-icons';
+import { Feather, FontAwesome5, Ionicons } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 import { get, post, remove, patch, baseurl } from '../network';
 import Swiper from 'react-native-swiper'
+import rdate from '../components/rdate';
 
 const width = Dimensions.get("screen").width
 
@@ -22,8 +23,8 @@ const renderImages = (images) => {
   });
 }
 
-const Item = ({ name, avatar, id, desc, price, fav, images }) => {
-  const [fave, setFav] = React.useState(fav)
+const Item = ({ offer, navigation, name, avatar, id, desc, price, fav, images }) => {
+  const [fave, setFav] = React.useState(fav ? 1 : 0)
   console.log(baseurl + avatar)
   return (
     <View style={{ width: "100%" }}>
@@ -36,30 +37,71 @@ const Item = ({ name, avatar, id, desc, price, fav, images }) => {
         borderColor: Colors.BGray,
         borderTopWidth: 1,
         borderBottomWidth: 1,
+        paddingLeft: global.token == "" ? 0 : 15,
+        paddingRight: 15,
         backgroundColor: Colors.WHITE
       }}>
-        <Image
-          source={{ uri: baseurl + avatar }}
-          style={{ width: 48, height: 48, resizeMode: "cover", borderRadius: 24, marginLeft: 15 }} />
-        <Text style={{ fontSize: 16, marginLeft: 15, textAlign: "left", flex: 1 }}>{name}</Text>
         <TouchableOpacity
           onPress={() => {
-            setFav(!fave)
+            navigation.navigate("Profile", { user: offer.user })
           }}
+          style={{
+            // flex:1,
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "row",
+          }}>
+          <Image
+            source={{ uri: baseurl + avatar }}
+            style={{ width: 48, height: 48, resizeMode: "cover", borderRadius: 24, marginLeft: 15 }} />
+          <View style={{ flex: 1, marginLeft: 15 }}>
+            <Text style={{ fontSize: 12, color: Colors.DGray, textAlign: "left" }}>{rdate(offer.created)} {offer.user.vip ? <FontAwesome5 name="crown" /> : ""}{offer.user.vip ? " VIP" : ""} </Text>
+            <Text style={{ fontSize: 16, textAlign: "left" }}>{offer.user.name}</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            if (fav == 1) {
+              setFav(2)
+              remove("/likes/likeID").then(r => {
+                if (r.ok == true) {
+                  setFav(0)
+                } else {
+                  setFav(1)
+                }
+              })
+            }
+            if (fav == 0) {
+              setFav(2)
+              post("/likes", { offer: offer.id }).then(r => {
+                if (r.ok == true) {
+                  setFav(1)
+                } else {
+                  setFav(0)
+                }
+              })
+            }
+          }}
+          style={{ display: global.token == "" ? "none" : "flex" }}
         >
           {
-            fave ?
+            fave == 1 ?
               <Ionicons name="heart" size={32} style={{ borderRadius: 24, marginRight: 15 }} />
-              :
-              <Ionicons name="heart-outline" size={32} style={{ borderRadius: 24, marginRight: 15 }} />
-
+              : fave == 2 ?
+                <ActivityIndicator size={32} style={{ borderRadius: 24, marginRight: 15 }} />
+                :
+                <Ionicons name="heart-outline" size={32} style={{ borderRadius: 24, marginRight: 15 }} />
           }
         </TouchableOpacity>
       </View>
-      <View style={{
-        width,
-        height: images.length > 0 ? width : 0,
-      }}>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("Offer", { offer: offer })
+        }}
+        style={{
+          width,
+          height: images.length > 0 ? width : 0,
+        }}>
         <Swiper style={{
           height: images.length > 0 ? width : 0,
         }}
@@ -70,7 +112,7 @@ const Item = ({ name, avatar, id, desc, price, fav, images }) => {
           showsButtons={false}>
           {renderImages(images)}
         </Swiper>
-      </View>
+      </TouchableOpacity>
       <View style={{
         width,
         height: 72,
@@ -81,7 +123,7 @@ const Item = ({ name, avatar, id, desc, price, fav, images }) => {
         borderColor: Colors.BGray,
         borderTopWidth: 1,
       }}>
-        <Text style={{ fontSize: 18, marginLeft: 10, marginRight: 10, marginTop: 5, flex: 1 }}>{price + "$"}</Text>
+        <Text style={{ fontSize: 20, marginLeft: 10, marginRight: 10, marginTop: 5, flex: 1 }}>{price + "$"}</Text>
         <Text style={{ fontSize: 16, marginLeft: 10, marginRight: 10, marginTop: 5, flex: 1 }}>{desc}</Text>
       </View>
     </View>
@@ -107,14 +149,19 @@ export default function HomeScreen({ navigation }) {
   const renderItems = () => {
     return data.map((item) => {
       return (
-        <Item name={item.user.name} avatar={item.user.avatar} fav={true} desc={item.desc} price={item.price} images={item.images} />
+        <Item offer={item} navigation={navigation} name={item.user.name} avatar={item.user.avatar} fav={false} desc={item.desc} price={item.price} images={item.images} />
       );
     });
   }
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.WHITE }}>
-      <CustomHeader title="Home" filter={true} navigation={navigation} />
+      <CustomHeader title="Home"
+        filter={() => {
+          setLoading(true)
+          setFt(true)
+        }}
+        left="filter" navigation={navigation} />
       <View style={{ flex: 1, alignItems: 'center', }}>
         <View style={styles.searchContainer}>
           <Feather name="search" size={18} color={Colors.DGray} />
@@ -129,13 +176,17 @@ export default function HomeScreen({ navigation }) {
         {
           loading ?
             <ActivityIndicator color="black" size={64} />
-            :
-            <ScrollView >
-              {
-                renderItems()
-              }
-              < View style={{ height: 100 }} />
-            </ScrollView>
+            : data.length > 0 ?
+              <ScrollView refreshControl={<RefreshControl refreshing={false} onRefresh={() => { setLoading(true); setFt(true) }} />} >
+                {
+                  renderItems()
+                }
+                < View style={{ height: 100 }} />
+              </ScrollView>
+              : <ScrollView refreshControl={<RefreshControl refreshing={false} onRefresh={() => { setLoading(true); setFt(true) }} />} contentContainerStyle={{ flexGrow: 1, justifyContent: "center", alignItems: "center" }} style={{ flex: 1 }}>
+                <Feather name="alert-triangle" color="black" size={64} />
+                <Text>No Data, try again later</Text>
+              </ScrollView>
         }
 
       </View>
