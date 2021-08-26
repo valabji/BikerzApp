@@ -13,7 +13,7 @@ export default function CustomHeader({ title, logo, isHome,filter, left, navigat
         {/* <Text style={{ textAlign: 'center', fontFamily: "Cairo_400Regular", fontWeight: "500", fontSize: 18 }}>{title}</Text> */}
         <Image
           // source={require("../assets/images/Logo.png")}
-          source={require("../assets/images/LogoType.png")}
+          source={require("../assets/images/bikerzType.png")}
           style={{
             width: 140,
             height: 50,

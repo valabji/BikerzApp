@@ -18,6 +18,7 @@ import styles, { SIZES } from '../constants/Style';
 import Ti from '../components/TextInput';
 import { post } from '../network';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { t } from '../language';
 /* const Colors = {
   BLACK: '#000',
   BLACK: '#FFF',
@@ -41,6 +42,7 @@ export default function Main({ navigation }) {
           global.avatar = r.data.avatar
           global.email = r.data.email
           global.phone = r.data.phone
+          global.user = r.data
           global.token = r.token
           setTimeout(async () => {
             await AsyncStorage.setItem("@token", "" + global.token)
@@ -48,9 +50,10 @@ export default function Main({ navigation }) {
             await AsyncStorage.setItem("@uid", "" + global.uid)
             await AsyncStorage.setItem("@avatar", "" + global.avatar)
             await AsyncStorage.setItem("@email", "" + global.email)
+            await AsyncStorage.setItem("@user", "" + global.user)
             await AsyncStorage.setItem("@phone", "" + global.phone)
             const test = await AsyncStorage.getItem("@token")
-            console.log("TEEEET:" + test)
+            // console.log("TEEEET:" + test)
             navigation.dispatch(StackActions.replace('BotNav'))
 
           }, 100);
@@ -64,7 +67,7 @@ Object {
 }
           */
         } else {
-          Alert.alert("Error", "Wrong phone / password ")
+          Alert.alert(t("er"), t("erlogin"))
         }
         setLoading(false);
       })
@@ -78,7 +81,7 @@ Object {
           <Ionicons name="call" size={18} color={Colors.DGray} />
           <TextInput
             value={phone}
-            placeholder="Phone Number"
+            placeholder={t("phone")}
             style={styles.input}
             placeholderTextColor={Colors.BLACK}
             onChangeText={value => setPhone(value)}
@@ -89,7 +92,7 @@ Object {
           <TextInput
             value={password}
             style={styles.input}
-            placeholder="Password"
+            placeholder={t("password")}
             placeholderTextColor={Colors.BLACK}
             secureTextEntry={!showPassword}
             onChangeText={value => setPassword(value)}
@@ -115,7 +118,7 @@ Object {
           {loading ? (
             <ActivityIndicator size={SIZES.FONT2} color={Colors.WHITE} />
           ) : (
-            <Text style={styles.signinLabel}>Sign in</Text>
+            <Text style={styles.signinLabel}>{t("login")}</Text>
           )}
         </TouchableOpacity>
 
@@ -131,7 +134,7 @@ Object {
               fontSize: SIZES.FONT2,
               marginTop: SIZES.PADDING * 2,
             }}>
-            Forgot password ?
+            {t("forgotpass")}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -146,7 +149,7 @@ Object {
               fontSize: SIZES.FONT2,
               marginTop: SIZES.PADDING * 2,
             }}>
-            Don't have an account ? <Text style={{ fontWeight: "500" }}>SIGN UP</Text>
+            {t("noacc")} <Text style={{ fontWeight: "500" }}>{t("register")}</Text>
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -161,7 +164,7 @@ Object {
               fontSize: SIZES.FONT2,
               marginTop: SIZES.PADDING * 2,
             }}>
-            <Feather name="chevrons-left" /> skip
+            <Feather name="chevrons-left" /> {t("skip")}
           </Text>
         </TouchableOpacity>
       </View>
@@ -172,8 +175,8 @@ Object {
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView style={styles.container}>
         <View style={{ flex: 0.5, justifyContent: 'center' }}>
-          <Text style={styles.title}>Login</Text>
-          <Text style={styles.title2}>TO YOUR ACCOUNT</Text>
+          <Text style={styles.title}>{t("login")}</Text>
+          <Text style={styles.title2}>{t("toacc")}</Text>
         </View>
         {renderInputs()}
       </KeyboardAvoidingView>

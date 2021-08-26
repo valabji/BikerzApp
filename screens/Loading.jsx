@@ -17,7 +17,7 @@ export default class Loading extends Component {
           alignItems: "center",
         }}
       >
-        <Image source={require("../assets/images/Logo.png")} />
+        <Image source={require("../assets/images/bikerz.png")} />
       </View>
     );
   }

@@ -10,10 +10,10 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/Logo.png",
+    "icon": "./assets/images/bikerz.png",
     "scheme": "myapp",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/bikerz.png",
       "resizeMode": "contain",
       "width":64,
       "backgroundColor": "#fff"

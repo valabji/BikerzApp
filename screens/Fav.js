@@ -1,6 +1,6 @@
 import * as React from 'react';
 import CustomHeader from '../components/CHeader'
-import { Text, View, SafeAreaView, Image as OldImage, RefreshControl, ActivityIndicator, TouchableOpacity, TextInput, Dimensions, ScrollView, Alert, Linking } from 'react-native'
+import { Text, View, SafeAreaView, Image as OldImage, RefreshControl, ActivityIndicator, TouchableOpacity, TextInput, Dimensions, ScrollView, Alert } from 'react-native'
 import { StackActions } from '@react-navigation/native';
 import Fonts from '../constants/Fonts';
 import styles, { SIZES } from '../constants/Style';
@@ -17,10 +17,8 @@ const width = Dimensions.get("screen").width
 
 
 export default function HomeScreen({ navigation }) {
-  const [fulldata, setFullData] = React.useState([])
   const [data, setData] = React.useState([])
   const [ft, setFt] = React.useState(true)
-  const [srch, setSrch] = React.useState("")
   const [loading, setLoading] = React.useState(true)
   if (ft) {
     setFt(false)
@@ -32,34 +30,26 @@ export default function HomeScreen({ navigation }) {
       get('/offers/likes')
         .then((res) => {
           let mar = []
-          if (res.data.lenght > 0) {
-            res.data.forEach(e => {
-              let fav = false
-              res.likes.forEach(x => {
-                if (x.offer == e._id) {
-                  fav = true
-                }
-              });
-              e.fav = fav
-              mar.push(e)
+          res.data.forEach(e => {
+            let fav = false
+            res.likes.forEach(x => {
+              if (x.offer == e._id) {
+                fav = true
+                e.fav = fav
+                mar.push(e)
+              }
             });
-            setData(mar)
-            setFullData(mar)
-          } else {
-
-          }
+          });
+          setData(mar)
           setLoading(false)
           // console.log(data)
         })
     } else {
       get('/offers')
         .then((res) => {
-          if (res.data.lenght > 0) {
-            setData(res.data)
-            setFullData(res.data)
-          }
+          setData(res.data)
           setLoading(false)
-          // console.log(data)
+          console.log(data)
         })
     }
 
@@ -71,14 +61,13 @@ export default function HomeScreen({ navigation }) {
     return offer.images.map((item) => {
       const preview = { uri: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" };
       const uri = baseurl + item
-      // console.log(uri)
+      console.log(uri)
       return (
         <View
           key={Math.random()}
         >
           <TouchableOpacity
             onPress={() => {
-              // Linking.openURL("http://facebook.com")
               navigation.navigate("Offer", { offer: offer })
             }}
             style={{
@@ -102,7 +91,7 @@ export default function HomeScreen({ navigation }) {
 
   const Item = ({ offer, navigation, name, avatar, id, desc, price, fav, images }) => {
     const [fave, setFav] = React.useState(offer.fav ? 1 : 0)
-    // console.log("avatar " + baseurl + avatar)
+    console.log(baseurl + avatar)
     const preview = { uri: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" };
     const uri = baseurl + avatar
     return (
@@ -130,16 +119,16 @@ export default function HomeScreen({ navigation }) {
               alignItems: "center",
               flexDirection: "row",
             }}>
-            <Image
+              <Image
               // progressiveRenderingEnabled={true}
               // defaultSource={{ uri: baseurl + item+".mini" }}
               // source={{ uri: baseurl + item }}
 
-              style={{ width: 48, height: 48, backgroundColor: "#fff", resizeMode: "cover", borderRadius: 24, marginLeft: 15 }}
+              style={{ width: 48, height: 48,backgroundColor:"#fff", resizeMode: "cover", borderRadius: 24, marginLeft: 15 }}
               {...{ preview, uri }}
             />
-            <View style={{ flex: 1, marginLeft: 15 }}>
-              <Text style={{ fontSize: 12, color: Colors.DGray, textAlign: "left" }}>{rdate(offer.created)} {offer.user.vip ? <FontAwesome5 name="crown" /> : ""}{offer.user.vip ? " 🇺🇸" : ""} </Text>
+             <View style={{ flex: 1, marginLeft: 15 }}>
+              <Text style={{ fontSize: 12, color: Colors.DGray, textAlign: "left" }}>{rdate(offer.created)} {offer.user.vip ? <FontAwesome5 name="crown" /> : ""}{offer.user.vip ? " VIP" : ""} </Text>
               <Text style={{ fontSize: 16, textAlign: "left" }}>{offer.user.name}</Text>
             </View>
           </TouchableOpacity>
@@ -151,6 +140,8 @@ export default function HomeScreen({ navigation }) {
                   if (r.ok == true) {
                     setFav(0)
                     offer.fav = false
+                    setLoading(true)
+                    setFt(true)
                   } else {
                     setFav(1)
                   }
@@ -162,6 +153,8 @@ export default function HomeScreen({ navigation }) {
                   if (r.ok == true) {
                     setFav(1)
                     offer.fav = true
+                    setLoading(true)
+                    setFt(true)
                   } else {
                     setFav(0)
                   }
@@ -234,35 +227,6 @@ export default function HomeScreen({ navigation }) {
         }}
         left="none" navigation={navigation} />
       <View style={{ flex: 1, alignItems: 'center', }}>
-        <View style={styles.searchContainer}>
-          <Feather name="search" size={18} color={Colors.DGray} />
-          <TextInput
-            // value={email}
-            placeholder={t("search")}
-            onChangeText={r => {
-              // setSrch(r)
-              let dt = []
-              fulldata.forEach(e => {
-                // console.log(e)
-                if (r == "") {
-                  dt.push(e)
-                } else {
-                  if (e.desc.includes(r)) {
-                    dt.push(e)
-                  }
-                }
-              });
-              // console.log(dt)
-              setData(dt)
-            }}
-            onSubmitEditing={() => {
-
-            }}
-            style={styles.search}
-            placeholderTextColor={Colors.DGray}
-          // onChangeText={value => setEmail(value)}
-          />
-        </View>
         {
           loading ?
             <ActivityIndicator color="black" size={64} />
@@ -277,7 +241,7 @@ export default function HomeScreen({ navigation }) {
               </ScrollView>
               : <ScrollView refreshControl={<RefreshControl refreshing={false} onRefresh={() => { setLoading(true); setFt(true) }} />} contentContainerStyle={{ flexGrow: 1, justifyContent: "center", alignItems: "center" }} style={{ flex: 1 }}>
                 <Feather name="alert-triangle" color="black" size={64} />
-                <Text>{t("nodata")}</Text>
+                <Text>{t("nolikes")}</Text>
               </ScrollView>
         }
 

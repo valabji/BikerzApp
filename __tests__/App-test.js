@@ -2,7 +2,7 @@
 // import NavigationTestUtils from 'react-navigation/NavigationTestUtils';
 // import renderer from 'react-test-renderer';
 
-// import App from '../App';
+// import App from '../components/Redux';
 
 test('should do test', () => {
   expect('a').toBe('a')

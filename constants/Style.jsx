@@ -1,6 +1,5 @@
-import { StyleSheet } from "react-native";
+import { I18nManager, StyleSheet } from "react-native";
 import Colors from "./Colors";
-import i18n from "i18n-js";
 
 export const SIZES = {
   BASE: 6,
@@ -11,11 +10,60 @@ export const SIZES = {
   PADDING: 12,
 };
 
+const ar = {
+  regular: "Tajawal_400Regular",
+  bold: "Tajawal_700Bold",
+  black: "Tajawal_900Black",
+  left: "right",
+  right: "left",
+  rtl: "ltr",
+  ltr: "rtl",
+};
+
+const en = {
+  regular: "Montserrat_400Regular",
+  bold: "Montserrat_700Bold",
+  black: "Montserrat_900Black",
+  left: "left",
+  right: "right",
+  rtl: "rtl",
+  ltr: "ltr",
+};
+
+const t = (x) => {
+  return I18nManager.isRTL ? ar[x] : en[x];
+};
+
 export default StyleSheet.create({
   container: {
     flex: 1,
     padding: SIZES.BASE * 4,
     backgroundColor: Colors.WHITE,
+  },
+  pagetitle: {
+    width: "100%",
+    fontSize: 24,
+    writingDirection: I18nManager.isRTL ? "rtl" : "ltr",
+    color: Colors.BGreen,
+    fontFamily: t("regular"),
+  },
+  normalInput: {
+    width: "100%",
+    fontFamily: t("regular"),
+    writingDirection: I18nManager.isRTL ? "rtl" : "ltr",
+    marginTop: 20,
+    backgroundColor: Colors.BGray,
+    borderRadius: 24,
+    paddingRight: 20,
+    paddingTop: 20,
+    paddingBottom: 20,
+    paddingLeft: 20,
+  },
+  buttonTitle: {
+    marginLeft: 12,
+    fontFamily: t("regular"),
+    color: Colors.WHITE,
+    fontSize: 24,
   },
   shadow: {
     shadowColor: "#000",
@@ -34,7 +82,7 @@ export default StyleSheet.create({
     paddingBottom: 15,
     color: Colors.BLACK,
     fontSize: SIZES.FONT2,
-    fontFamily: i18n.t("regular"),
+    fontFamily: t("regular"),
     // backgroundColor:"red",
     flex: 1,
     // paddingVertical: SIZES.PADDING * 0.5,
@@ -67,7 +115,10 @@ export default StyleSheet.create({
     paddingBottom: 15,
     color: Colors.BLACK,
     fontSize: SIZES.FONT2,
-    fontFamily: i18n.t("regular"),
+    fontFamily: t("regular"),
+    // textAlign: "left",
+    writingDirection: I18nManager.isRTL ? "rtl" : "ltr",
+    // writingDirection: t("ltr"),
     // backgroundColor:"red",
     flex: 1,
     // paddingVertical: SIZES.PADDING * 0.5,
@@ -117,7 +168,7 @@ export default StyleSheet.create({
     color: Colors.WHITE,
     fontSize: SIZES.FONT2,
     // fontWeight: "600",
-    fontFamily: i18n.t("black"),
+    fontFamily: t("black"),
     letterSpacing: 0.5,
     textAlign: "center",
   },
@@ -125,14 +176,14 @@ export default StyleSheet.create({
     color: Colors.DYellow,
     fontSize: SIZES.TITLE,
     // fontWeight: "700",
-    fontFamily: i18n.t("bold"),
+    fontFamily: t("bold"),
     letterSpacing: 1,
     marginBottom: SIZES.BASE,
   },
   title2: {
     color: Colors.BLACK,
     fontSize: SIZES.FONT2,
-    fontFamily: i18n.t("regular"),
+    fontFamily: t("regular"),
     // fontWeight: "400",
     letterSpacing: 1,
     marginBottom: SIZES.BASE,
@@ -1358,7 +1409,7 @@ export default StyleSheet.create({
   womenClothingMenText: {
     backgroundColor: "transparent",
     color: "black",
-    fontFamily: "Poppins_300Light",
+    fontFamily: t("regular"),
     fontSize: 16,
     fontStyle: "normal",
     fontWeight: "normal",
@@ -1477,7 +1528,7 @@ export default StyleSheet.create({
   avatarImage: {
     resizeMode: "cover",
     backgroundColor: "transparent",
-    borderRadius:45,
+    borderRadius: 45,
     width: 90,
     height: 90,
   },
@@ -1488,7 +1539,7 @@ export default StyleSheet.create({
     fontStyle: "normal",
     fontWeight: "normal",
     textAlign: "left",
-    width:130,
+    width: 130,
   },
   line28View: {
     backgroundColor: "rgb(112, 112, 112)",
@@ -1518,7 +1569,7 @@ export default StyleSheet.create({
     fontStyle: "normal",
     fontWeight: "normal",
     textAlign: "left",
-    width:130,
+    width: 130,
     backgroundColor: "transparent",
     // position: "absolute",
     // alignSelf: "center",

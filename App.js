@@ -5,21 +5,10 @@ import * as Font from 'expo-font';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer'
-import BottomTabNavigator from './navigation/BottomTabNavigator';
 import NestedNavigations from './navigation/NestedNavigations';
-import LoginScreen from './screens/LoginScreen'
-import RegScreen from './screens/Register'
-import TabBarIcon from './components/TabBarIcon';
-import Screen3 from './screens/Screen3'
 import useLinking from './navigation/useLinking';
-import Colors from './constants/Colors';
 import Constants from 'expo-constants';
-import LoadingScreen from './screens/Loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { LocalizationProvider, LocalizationContext } from './language';
-
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
   useFonts,
   Tajawal_400Regular,
@@ -29,61 +18,24 @@ import {
 import { Cairo_400Regular, Cairo_700Bold, Cairo_900Black } from '@expo-google-fonts/cairo'
 import { Poppins_200ExtraLight, Poppins_300Light, Poppins_500Medium, Poppins_400Regular, Poppins_700Bold } from '@expo-google-fonts/poppins'
 import { Montserrat_400Regular, Montserrat_700Bold, Montserrat_900Black } from '@expo-google-fonts/montserrat';
-import Fonts from './constants/Fonts';
-import { configureStore, createAction, createReducer } from '@reduxjs/toolkit';
 import { langinit } from './language';
+import I18n from 'i18n-js';
 
-const change = createAction('change')
-const changeReducer = createReducer({ "obj": { "x": "y", "ActiveS": true, "lang": "ar", "RandomNoti": 2342 } }, {
-  [change]: (state, action) => {
-    state.obj = action.obj
-    return state
-  },
-})
-export const mystore = configureStore({ reducer: changeReducer })
+// LogBox.ignoreAllLogs()
 
-LogBox.ignoreAllLogs()
-
-/*
-mystore.dispatch({ type: 'change', "obj": { "lang": "ar" } })
-
-const [ft, setFt] = React.useState(true)
-const [Azkar, setAzkar] = React.useState(mystore.getState().obj.Azkar)
-
-
-const chaged = () => {
-    try {
-        setAzkar(mystore.getState().obj.Azkar)
-    } catch (e) {
-
-    }
-}
-
-if (ft) {
-    setFt(false)
-    mystore.subscribe(chaged)
-}
-*/
 const Stack = createStackNavigator();
-// Set the key-value pairs for the different languages you want to support.
-
 export default function App(props) {
-  SplashScreen.preventAutoHideAsync();
+  // SplashScreen.preventAutoHideAsync();
+  // I18n.locale = "ar"
 
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
   const [ft, setFt] = React.useState(true);
+  const [ft2, setFt2] = React.useState(true);
   const [isLoading, setIsLoading] = React.useState(true);
   const [initialNavigationState, setInitialNavigationState] = React.useState();
   const containerRef = React.useRef();
   const { getInitialState } = useLinking(containerRef);
-  /* 
-    const {
-      translations,
-      appLanguage,
-      setAppLanguage,
-      initializeAppLanguage,
-    } = useContext(LocalizationContext); // 1 
-    initializeAppLanguage(); // 2  */
+
 
   let [fontsLoaded] = useFonts({
     Tajawal_400Regular,
@@ -113,9 +65,10 @@ export default function App(props) {
         global.avatar = await AsyncStorage.getItem("@avatar") || ""
         global.email = await AsyncStorage.getItem("@email") || ""
         global.phone = await AsyncStorage.getItem("@phone") || ""
+        global.user = await AsyncStorage.getItem("@user") || ""
         const test = await AsyncStorage.getItem("@token")
         global.lang = lang
-        
+
         langinit()
         // AsyncStorage.clear('@lang')
       } catch (e) {
@@ -139,7 +92,10 @@ export default function App(props) {
         console.warn(e);
       } finally {
         setLoadingComplete(true);
-        SplashScreen.hideAsync();
+        if (ft2) {
+          setFt2(false)
+          // SplashScreen.hideAsync();
+        }
       }
     }
 
