@@ -517,7 +517,7 @@ export default function NestedNavigations() {
                     <TouchableOpacity
                       onPress={() => {
                         // console.log(JSON.stringify(global.user));
-                        navigation.navigate("Profile", { user: global.user });
+                        navigation.navigate("Profile", { user: JSON.parse(global.user) });
                       }}
                       style={{
                         flexDirection: "row",

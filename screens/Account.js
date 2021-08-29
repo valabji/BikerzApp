@@ -47,9 +47,6 @@ export default function Main({ navigation }) {
   const [edit, setEdit] = useState("0");
   const [rand, setRand] = React.useState(0)
 
-
-
-
   const getImage = async () => {
     let img = null
     await Alert.alert("", t("slcsrc"), [
@@ -145,8 +142,6 @@ export default function Main({ navigation }) {
 
   };
 
-
-
   const renderInputs = () => {
     return (
       <View style={{ flex: 1 }}>
@@ -195,11 +190,11 @@ export default function Main({ navigation }) {
             placeholder={t("whats")}
             style={styles.input}
             placeholderTextColor={Colors.BLACK}
-            // onChangeText={value => setPhone(value)}
+          // onChangeText={value => setPhone(value)}
           />
         </View>
 
-        <View style={styles.inputContainer}>
+        <View style={[styles.inputContainer, { display: "none" }]}>
           <Ionicons name="lock-closed-outline" size={18} color={Colors.DGray} />
           <TextInput
             value={password}
@@ -262,121 +257,123 @@ export default function Main({ navigation }) {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <CustomHeader title="Home" left="back" navigation={navigation} />
-      <ScrollView style={styles.container}>
-        <TouchableOpacity
-          onPress={() => {
-            pickImage()
-          }}
-          style={{ alignItems: "center" }}>
-          <View style={{ width: 128, height: 128 }}>
-            <Image
-              source={{ uri: avatar }}
-              style={{ width: 128, height: 128, borderWidth: 0.5, resizeMode: "cover", borderRadius: 64 }} />
-            <View style={{ position: "absolute", borderWidth: 0.5, bottom: 0, right: 10, backgroundColor: Colors.BGray, borderRadius: 12, width: 30, height: 30, justifyContent: "center", alignItems: "center" }}>
-              {
-                loading == 1 ?
-                  <ActivityIndicator color={Colors.BLACK} size={24} />
-                  :
-                  loading == 2 ?
-                    <Feather name="check-circle" size={24} />
+      <View style={styles.container}>
+        <ScrollView>
+          <TouchableOpacity
+            onPress={() => {
+              pickImage()
+            }}
+            style={{ alignItems: "center" }}>
+            <View style={{ width: 128, height: 128 }}>
+              <Image
+                source={{ uri: avatar }}
+                style={{ width: 128, height: 128, borderWidth: 0.5, resizeMode: "cover", borderRadius: 64 }} />
+              <View style={{ position: "absolute", borderWidth: 0.5, bottom: 0, right: 10, backgroundColor: Colors.BGray, borderRadius: 12, width: 30, height: 30, justifyContent: "center", alignItems: "center" }}>
+                {
+                  loading == 1 ?
+                    <ActivityIndicator color={Colors.BLACK} size={24} />
                     :
-                    <Feather name="edit" size={24} />
-              }
-            </View>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            if (edit == 0) {
-              setEdit(1)
-            }
-            if (edit == 1) {
-              if (firstname == "") {
-                Alert.alert(t("er"), t("ername"))
-                return null
-              }
-              if (email == "") {
-                Alert.alert(t("er"), t("eremail"))
-                return null
-              }
-              if (phone == "") {
-                Alert.alert(t("er"), t("erphone"))
-                return null
-              }
-              if (password != password2) {
-                Alert.alert(t("er"), t("erpass2"))
-                return null
-              }
-              setEdit(2)
-              let altered = {
-                email: email,
-                name: firstname
-              }
-              if (password != "") {
-                altered.password = password
-              }
-              console.log(altered)
-
-              patch('/users/123', altered).then(r => {
-                console.log(r.ok)
-                if (r.ok) {
-                  global.fullname = firstname
-                  // global.uid = r.data._id
-                  // global.avatar = r.data.avatar
-                  global.email = email
-                  global.phone = phone
-                  // global.token = r.token
-                  let usr = {}
-                  Object.keys(global.user).forEach(e => {
-                    usr[e] = global.user[e]
-                  });
-                  usr.name = firstname
-                  usr.email = email
-                  usr.phone = phone
-                  global.user = usr
-                  console.log(usr)
-                  setTimeout(async () => {
-                    // await AsyncStorage.setItem("@token", "" + global.token)
-                    await AsyncStorage.setItem("@fullname", "" + global.fullname)
-                    // await AsyncStorage.setItem("@uid", "" + global.uid)
-                    // await AsyncStorage.setItem("@avatar", "" + global.avatar)
-                    await AsyncStorage.setItem("@email", "" + global.email)
-                    await AsyncStorage.setItem("@user", "" + global.user)
-                    await AsyncStorage.setItem("@phone", "" + global.phone)
-                    // const test = await AsyncStorage.getItem("@token")
-                    // console.log("TEEEET:" + test)
-                    // navigation.dispatch(StackActions.replace('BotNav'))
-                  }, 100);
-                  setEdit(3)
-                  setTimeout(() => {
-                    setEdit(0)
-                  }, 1500);
-                } else {
-                  Alert.alert(t("er"), t("try"))
-                  setEdit(1)
+                    loading == 2 ?
+                      <Feather name="check-circle" size={24} />
+                      :
+                      <Feather name="edit" size={24} />
                 }
-              })
-            }
-            if (edit == 2) {
-              setEdit(0)
-              Alert.alert(t("loading"), t("wait"))
-            }
+              </View>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              if (edit == 0) {
+                setEdit(1)
+              }
+              if (edit == 1) {
+                if (firstname == "") {
+                  Alert.alert(t("er"), t("ername"))
+                  return null
+                }
+                if (email == "") {
+                  Alert.alert(t("er"), t("eremail"))
+                  return null
+                }
+                if (phone == "") {
+                  Alert.alert(t("er"), t("erphone"))
+                  return null
+                }
+                if (password != password2) {
+                  Alert.alert(t("er"), t("erpass2"))
+                  return null
+                }
+                setEdit(2)
+                let altered = {
+                  email: email,
+                  name: firstname
+                }
+                if (password != "") {
+                  altered.password = password
+                }
+                console.log(altered)
 
-          }}
-          style={{ flex: 0.5, justifyContent: 'center', marginTop: 40, marginBottom: 40 }}>
-          {
-            edit == 0 ?
-              <Text style={{ fontSize: 24, marginTop: 10 }}>  <Feather name="edit" size={24} /> {t("edit")}</Text>
-              : edit == 1 ?
-                <Text style={{ fontSize: 24, marginTop: 10 }}>  <Feather name="check-circle" size={24} /> {t("save")}</Text>
-                : edit == 3 ?
-                  <Text style={{ fontSize: 24, marginTop: 10 }}>  <Feather name="check-circle" size={24} /> {t("saved")}</Text>
-                  :
-                  <Text style={{ fontSize: 24, marginTop: 10 }}>  <ActivityIndicator color={Colors.BLACK} size={24} /> {t("saving")}</Text>
-          }
-        </TouchableOpacity>
-        {renderInputs()}
-      </ScrollView>
+                patch('/users/123', altered).then(r => {
+                  console.log(r.ok)
+                  if (r.ok) {
+                    global.fullname = firstname
+                    // global.uid = r.data._id
+                    // global.avatar = r.data.avatar
+                    global.email = email
+                    global.phone = phone
+                    // global.token = r.token
+                    let usr = {}
+                    Object.keys(global.user).forEach(e => {
+                      usr[e] = global.user[e]
+                    });
+                    usr.name = firstname
+                    usr.email = email
+                    usr.phone = phone
+                    global.user = usr
+                    console.log(usr)
+                    setTimeout(async () => {
+                      // await AsyncStorage.setItem("@token", "" + global.token)
+                      await AsyncStorage.setItem("@fullname", "" + global.fullname)
+                      // await AsyncStorage.setItem("@uid", "" + global.uid)
+                      // await AsyncStorage.setItem("@avatar", "" + global.avatar)
+                      await AsyncStorage.setItem("@email", "" + global.email)
+                      await AsyncStorage.setItem("@user", "" + global.user)
+                      await AsyncStorage.setItem("@phone", "" + global.phone)
+                      // const test = await AsyncStorage.getItem("@token")
+                      // console.log("TEEEET:" + test)
+                      // navigation.dispatch(StackActions.replace('BotNav'))
+                    }, 100);
+                    setEdit(3)
+                    setTimeout(() => {
+                      setEdit(0)
+                    }, 1500);
+                  } else {
+                    Alert.alert(t("er"), t("try"))
+                    setEdit(1)
+                  }
+                })
+              }
+              if (edit == 2) {
+                setEdit(0)
+                Alert.alert(t("loading"), t("wait"))
+              }
+
+            }}
+            style={{ flex: 0.5, justifyContent: 'center', marginTop: 40, marginBottom: 40 }}>
+            {
+              edit == 0 ?
+                <Text style={{ fontSize: 24, marginTop: 10 }}>  <Feather name="edit" size={24} /> {t("edit")}</Text>
+                : edit == 1 ?
+                  <Text style={{ fontSize: 24, marginTop: 10 }}>  <Feather name="check-circle" size={24} /> {t("save")}</Text>
+                  : edit == 3 ?
+                    <Text style={{ fontSize: 24, marginTop: 10 }}>  <Feather name="check-circle" size={24} /> {t("saved")}</Text>
+                    :
+                    <Text style={{ fontSize: 24, marginTop: 10 }}>  <ActivityIndicator color={Colors.BLACK} size={24} /> {t("saving")}</Text>
+            }
+          </TouchableOpacity>
+          {renderInputs()}
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };

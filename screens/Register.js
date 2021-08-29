@@ -1,8 +1,11 @@
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { StackActions } from '@react-navigation/native';
 import Colors from '../constants/Colors';
+import PhoneInput from "react-native-phone-number-input";
+import { mystore } from '../components/Redux';
+
 import {
   Text,
   TextInput,
@@ -14,6 +17,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Alert,
+  I18nManager,
 } from 'react-native';
 import styles, { SIZES } from '../constants/Style';
 import Ti from '../components/TextInput';
@@ -37,6 +41,8 @@ export default function Main({ navigation }) {
   const [password2, setPassword2] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  // const phoneInput = useRef < PhoneInput > (null);
+
   const handleLogin = useCallback(async () => {
     // setLoading(false);
 
@@ -45,25 +51,12 @@ export default function Main({ navigation }) {
         Alert.alert((t("er")), t("erfname"))
         return null
       }
-      if (lastname == "") {
-        Alert.alert(t("er"), t("erlname"))
-        return null
-      }
       if (email == "") {
         Alert.alert(t("er"), t("eremail"))
         return null
       }
       if (phone == "") {
         Alert.alert(t("er"), t("erphone"))
-        return null
-      }
-      if (password == "") {
-        Alert.alert(t("er"), t("erpass"))
-        return null
-      }
-
-      if (password != password2) {
-        Alert.alert(t("er"), t("erpass2"))
         return null
       }
 
@@ -77,7 +70,9 @@ export default function Main({ navigation }) {
         console.log(r.ok)
         if (r.ok) {
           Alert.alert(t("success"), t("usercr"))
+          mystore.dispatch({ type: 'change', "obj": { "RandNoti": "" + Date.now() } })
           navigation.navigate("Login")
+          mystore.dispatch({ type: 'change', "obj": { "RandNoti": "" + Date.now() } })
         } else {
           Alert.alert(t("er"), t("erphone2"))
         }
@@ -112,71 +107,24 @@ export default function Main({ navigation }) {
           />
         </View>
 
-        <View style={styles.inputContainer}>
-          <Ionicons name="phone-portrait" size={18} color={Colors.DGray} />
-          <TextInput
-            value={phone}
-            placeholder={t("phone")}
-            style={styles.input}
-            placeholderTextColor={Colors.BLACK}
-            onChangeText={value => setPhone(value)}
-          />
-        </View>
+        <PhoneInput
+          // ref={phoneInput}
+          defaultValue={phone}
+          defaultCode="SA"
+          layout="first"
+          placeholder={t("phone")}
+          onChangeFormattedText={(text) => {
+            setPhone(text);
+            global.tphone = global.tphone = text
+            console.log(text)
 
-        <View style={styles.inputContainer}>
-          <Ionicons name="lock-closed-outline" size={18} color={Colors.DGray} />
-          <TextInput
-            value={password}
-            style={styles.input}
-            placeholder={t("password")}
-            placeholderTextColor={Colors.BLACK}
-            secureTextEntry={!showPassword}
-            onChangeText={value => setPassword(value)}
-          />
-          <TouchableOpacity
-            style={{
-              right: 10,
-              // top: SIZES.BASE+7,
-              position: 'absolute',
-              justifyContent: "center",
-              width: 18,
-              height: 30,
-            }}
-            onPress={() => setShowPassword(!showPassword)}>
-            <Feather
-              color={Colors.BLACK}
-              size={18}
-              name={!showPassword ? 'eye' : 'eye-off'}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.inputContainer}>
-          <Ionicons name="lock-closed-outline" size={18} color={Colors.DGray} />
-          <TextInput
-            value={password2}
-            style={styles.input}
-            placeholder={t("password2")}
-            placeholderTextColor={Colors.BLACK}
-            secureTextEntry={!showPassword}
-            onChangeText={value => setPassword2(value)}
-          />
-          <TouchableOpacity
-            style={{
-              right: 10,
-              // top: SIZES.BASE+7,
-              position: 'absolute',
-              justifyContent: "center",
-              width: 18,
-              height: 30,
-            }}
-            onPress={() => setShowPassword(!showPassword)}>
-            <Feather
-              color={Colors.BLACK}
-              size={18}
-              name={!showPassword ? 'eye' : 'eye-off'}
-            />
-          </TouchableOpacity>
-        </View>
+          }}
+
+          containerStyle={styles.PhoneContainer}
+          textContainerStyle={{ backgroundColor: "transparent", flexDirection: I18nManager.isRTL ? "row-reverse" : "row" }}
+          codeTextStyle={{ fontFamily: t("regular") }}
+          textInputStyle={{ paddingLeft: 10, paddingRight: 10, fontFamily: t("regular") }}
+        />
 
         <TouchableOpacity activeOpacity={0.8} style={styles.signin} onPress={() => handleLogin()}>
           {loading ? (
@@ -195,10 +143,11 @@ export default function Main({ navigation }) {
               textAlign: 'right',
               fontWeight: '300',
               color: Colors.BLACK,
+              fontFamily: t("regular"),
               fontSize: SIZES.FONT2,
               marginTop: SIZES.PADDING * 2,
             }}>
-            {t("haveacc")} <Text style={{ fontWeight: "500" }}>{t("login")}</Text>
+            {t("haveacc")} <Text style={{ fontFamily: t("bold") }}>{t("login")}</Text>
           </Text>
         </TouchableOpacity>
 
@@ -211,6 +160,7 @@ export default function Main({ navigation }) {
               textAlign: 'right',
               fontWeight: '300',
               marginBottom: 200,
+              fontFamily: t("regular"),
               color: Colors.DGray,
               fontSize: SIZES.FONT2,
               marginTop: SIZES.PADDING * 2,
@@ -224,13 +174,15 @@ export default function Main({ navigation }) {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView style={styles.container}>
-        <View style={{ flex: 0.5, justifyContent: 'center', marginTop: 40, marginBottom: 40 }}>
-          <Text style={styles.title}>{t("register")}</Text>
-          <Text style={styles.title2}>{t("newacc")}</Text>
-        </View>
-        {renderInputs()}
-      </ScrollView>
+      <View style={styles.container}>
+        <ScrollView >
+          <View style={{ flex: 0.5, justifyContent: 'center', marginTop: 40, marginBottom: 40 }}>
+            <Text style={styles.title}>{t("register")}</Text>
+            <Text style={styles.title2}>{t("newacc")}</Text>
+          </View>
+          {renderInputs()}
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };

@@ -8,6 +8,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import NestedNavigations from './navigation/NestedNavigations';
 import useLinking from './navigation/useLinking';
 import Constants from 'expo-constants';
+import * as Linking from 'expo-linking';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   useFonts,
@@ -21,7 +22,7 @@ import { Montserrat_400Regular, Montserrat_700Bold, Montserrat_900Black } from '
 import { langinit } from './language';
 import I18n from 'i18n-js';
 
-// LogBox.ignoreAllLogs()
+LogBox.ignoreAllLogs()
 
 const Stack = createStackNavigator();
 export default function App(props) {
@@ -31,10 +32,22 @@ export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
   const [ft, setFt] = React.useState(true);
   const [ft2, setFt2] = React.useState(true);
+  const [dt, setDt] = React.useState(null)
   const [isLoading, setIsLoading] = React.useState(true);
   const [initialNavigationState, setInitialNavigationState] = React.useState();
   const containerRef = React.useRef();
   const { getInitialState } = useLinking(containerRef);
+
+  const prefix = Linking.makeUrl("/")
+
+  const linking = {
+    prefixes:[prefix],
+    config:{
+      screens:{
+        "Offers":"Offers"
+      }
+    }
+  }
 
 
   let [fontsLoaded] = useFonts({
@@ -101,6 +114,7 @@ export default function App(props) {
 
     loadResourcesAndDataAsync();
   }, []);
+
   if (!isLoadingComplete && !fontsLoaded && !props.skipLoadingScreen) {
     return null
   } else {

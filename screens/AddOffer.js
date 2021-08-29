@@ -18,11 +18,46 @@ const { width, height } = Dimensions.get("screen");
 export default function HomeScreen({ navigation }) {
 
   const [images, setImages] = React.useState([]);
-  const [list, setList] = React.useState([
-    { label: 'English', value: 'en' },
-    { label: 'Deutsch', value: 'de' },
-    { label: 'French', value: 'fr' },
+
+  const [list1, setList1] = React.useState([
+    { label: t('SAR'), value: 'SAR' },
   ])
+  const [open1, setOpen1] = React.useState(false)
+  const [value1, setValue1] = React.useState("SAR")
+
+  const [list2, setList2] = React.useState([
+    { label: 'TOYOTA', value: 'TOYOTA' },
+    { label: 'XYZ', value: 'XYZ' },
+    { label: 'HONDA', value: 'HONDA' },
+  ])
+  const [open2, setOpen2] = React.useState(false)
+  const [value2, setValue2] = React.useState(null)
+
+  const curyear = new Date().getFullYear()
+  console.log(curyear)
+  let years = []
+  for (let i = curyear; i >= 1990; i--) {
+    years.push({ label: '' + i, value: '' + i })
+  }
+
+  const [list3, setList3] = React.useState(years)
+
+  const [open3, setOpen3] = React.useState(false)
+  const [value3, setValue3] = React.useState(null)
+
+  const [list4, setList4] = React.useState([
+    { label: t('blue'), value: 'blue' },
+    { label: t('green'), value: 'green' },
+    { label: t('red'), value: 'red' },
+    { label: t('blackcolor'), value: 'blackcolor' },
+    { label: t('white'), value: 'white' },
+    { label: t('other'), value: 'other' }
+  ])
+  const [open4, setOpen4] = React.useState(false)
+  const [value4, setValue4] = React.useState(null)
+
+
+
   const [rand, setRand] = React.useState(0)
   const [price, setPrice] = React.useState("")
   const [cur, setCur] = React.useState("")
@@ -218,37 +253,110 @@ export default function HomeScreen({ navigation }) {
             placeholderTextColor="#000"
             onChangeText={r => { setPrice(r) }}
             style={styles.normalInput}
+            returnKeyLabel={()=>{return(<View style={{width:60,height:60,}} />)}}
           />
-          <View
-            style={{ height: 100 }}
-          >
 
+          <View
+            style={{ height: open1 ? 200 : 0, marginTop: 20, }}
+          >
             <DropDownPicker
-              items={list}
-              defaultIndex={1}
+              items={list1}
+              open={open1}
+              value={value1}
+              setOpen={(open1) => {
+                setOpen1(open1)
+              }}
+              placeholder={t("cur")}
+              style={{display:"none"}}
+              placeholderStyle={{ fontFamily: t("regular"), writingDirection: I18nManager.isRTL ? "rtl" : "ltr" }}
+              textStyle={{ fontFamily: t("regular"), writingDirection: I18nManager.isRTL ? "rtl" : "ltr" }}
+              labelStyle={{ fontFamily: t("regular"), writingDirection: I18nManager.isRTL ? "rtl" : "ltr" }}
+              listItemLabelStyle={{ fontFamily: t("regular"), writingDirection: I18nManager.isRTL ? "rtl" : "ltr" }}
+              customItemLabelStyle={{ fontFamily: t("regular"), writingDirection: I18nManager.isRTL ? "rtl" : "ltr" }}
+              setValue={(v) => { setValue1(v) }}
+              dropDownContainerStyle={{ height: 140 }}
               listMode="SCROLLVIEW"
-              containerStyle={{ height: 40 }}
-              listItemContainerStyle={{height:40}}
-              listItemLabelStyle={{height:40}}
-              style={{ height: 40, }}
-              dropDownContainerStyle={{ backgroundColor: 'white', height: 200, zIndex: 1000, elevation: 1000 }}
               onChangeItem={item => console.log(item.label, item.value)}
             />
           </View>
-          <TextInput
-            value={cur}
-            multiline={false}
-            placeholder={t("cur")}
-            onChangeText={r => { setCur(r) }}
-            placeholderTextColor="#000"
-            style={styles.normalInput}
-          />
+
+          <View
+            style={{ height: open2 ? 200 : 60, marginTop: 20, }}
+          >
+            <DropDownPicker
+              items={list2}
+              open={open2}
+              value={value2}
+              searchable={true}
+              setOpen={(open2) => {
+                setOpen2(open2)
+              }}
+              placeholder={t("manufacture")}
+              placeholderStyle={{ fontFamily: t("regular"), writingDirection: I18nManager.isRTL ? "rtl" : "ltr" }}
+              textStyle={{ fontFamily: t("regular"), writingDirection: I18nManager.isRTL ? "rtl" : "ltr" }}
+              labelStyle={{ fontFamily: t("regular"), writingDirection: I18nManager.isRTL ? "rtl" : "ltr" }}
+              listItemLabelStyle={{ fontFamily: t("regular"), writingDirection: I18nManager.isRTL ? "rtl" : "ltr" }}
+              customItemLabelStyle={{ fontFamily: t("regular"), writingDirection: I18nManager.isRTL ? "rtl" : "ltr" }}
+              setValue={(v) => { setValue2(v) }}
+              dropDownContainerStyle={{ height: 140 }}
+              listMode="SCROLLVIEW"
+              onChangeItem={item => console.log(item.label, item.value)}
+            />
+          </View>
+
+          <View
+            style={{ height: open3 ? 200 : 60, marginTop: 20, }}
+          >
+            <DropDownPicker
+              items={list3}
+              open={open3}
+              value={value3}
+              setOpen={(open3) => {
+                setOpen3(open3)
+              }}
+              placeholder={t("year")}
+              placeholderStyle={{ fontFamily: t("regular"), writingDirection: I18nManager.isRTL ? "rtl" : "ltr" }}
+              textStyle={{ fontFamily: t("regular"), writingDirection: I18nManager.isRTL ? "rtl" : "ltr" }}
+              labelStyle={{ fontFamily: t("regular"), writingDirection: I18nManager.isRTL ? "rtl" : "ltr" }}
+              listItemLabelStyle={{ fontFamily: t("regular"), writingDirection: I18nManager.isRTL ? "rtl" : "ltr" }}
+              customItemLabelStyle={{ fontFamily: t("regular"), writingDirection: I18nManager.isRTL ? "rtl" : "ltr" }}
+              setValue={(v) => { setValue3(v) }}
+              dropDownContainerStyle={{ height: 140 }}
+              listMode="SCROLLVIEW"
+              onChangeItem={item => console.log(item.label, item.value)}
+            />
+          </View>
+
+          <View
+            style={{ height: open4 ? 200 : 60, marginTop: 20, }}
+          >
+            <DropDownPicker
+              items={list4}
+              open={open4}
+              value={value4}
+              setOpen={(open4) => {
+                setOpen4(open4)
+              }}
+              placeholder={t("color")}
+              placeholderStyle={{ fontFamily: t("regular"), writingDirection: I18nManager.isRTL ? "rtl" : "ltr" }}
+              textStyle={{ fontFamily: t("regular"), writingDirection: I18nManager.isRTL ? "rtl" : "ltr" }}
+              labelStyle={{ fontFamily: t("regular"), writingDirection: I18nManager.isRTL ? "rtl" : "ltr" }}
+              listItemLabelStyle={{ fontFamily: t("regular"), writingDirection: I18nManager.isRTL ? "rtl" : "ltr" }}
+              customItemLabelStyle={{ fontFamily: t("regular"), writingDirection: I18nManager.isRTL ? "rtl" : "ltr" }}
+              setValue={(v) => { setValue4(v) }}
+              dropDownContainerStyle={{ height: 140 }}
+              listMode="SCROLLVIEW"
+              onChangeItem={item => console.log(item.label, item.value)}
+            />
+          </View>
+
           <TextInput
             value={desc}
             multiline={true}
-            placeholder={t("desc")}
+            placeholder={t("moredesc")}
             onChangeText={r => { setDesc(r) }}
             placeholderTextColor="#000"
+            height={70}
             style={styles.normalInput}
           />
           <ScrollView horizontal style={{ zIndex: 3 }} contentContainerStyle={{ height: images.length > 0 ? 100 : 0 }}>
@@ -273,13 +381,9 @@ export default function HomeScreen({ navigation }) {
                 Alert.alert(t("er"), t("erprice"))
                 return
               }
-              if (cur == "") {
-                Alert.alert(t("er"), t("ercur"))
-                return
-              }
+
               if (desc == "") {
-                Alert.alert(t("er"), t("erdesc"))
-                return
+                setDesc("-")
               }
               if (images.length == 0) {
                 Alert.alert(t("er"), t("erphoto"))
@@ -307,7 +411,10 @@ export default function HomeScreen({ navigation }) {
               setLoading(true)
               post("/offers", {
                 price: price,
-                cur: cur,
+                cur: value1,
+                manufacture: value2,
+                year: value3,
+                color: value4,
                 desc: desc,
                 images: photos
               }).then(r => {

@@ -8,11 +8,7 @@
 
 import React from "react"
 import { Image, StyleSheet, TouchableOpacity, Text, View, Alert } from "react-native"
-import * as Animatable from 'react-native-animatable';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Restart } from 'fiction-expo-restart';
-import { t } from "../language";
-import CustomHeader from '../components/CHeader'
+import DropDownPicker from 'react-native-dropdown-picker'
 
 export default class Splash extends React.Component {
 
@@ -28,6 +24,15 @@ export default class Splash extends React.Component {
 
 	constructor(props) {
 		super(props)
+		this.state = {
+			open: false,
+			value: null,
+			items: [
+				{ label: 'English', value: 'en' },
+				{ label: 'Deutsch', value: 'de' },
+				{ label: 'French', value: 'fr' },
+			]
+		}
 	}
 
 	componentDidMount() {
@@ -36,52 +41,39 @@ export default class Splash extends React.Component {
 	}
 
 	render() {
-		return <View
-			style={styles.viewView}>
-			<CustomHeader title="Home"
-				filter={() => {
+		const { open, value, items } = this.state;
 
+		return (
+			<DropDownPicker
+				open={open}
+				value={value}
+				items={items}
+				setOpen={(open) => {
+					this.setState({
+						open
+					});
 				}}
-				left="back" navigation={this.props.navigation} />
+				setValue={(callback) => {
+					this.setState(state => ({
+						value: callback(state.value)
+					}));
+				}}
+				setItems={(callback) => {
+					this.setState(state => ({
+						items: callback(state.items)
+					}));
+				}}
+			/>
+		);
+
+		return <View style={{ flex: 1, backgroundColor: "#fff", justifyContent: "center", alignItems: "center" }}>
 			<Text>Testing 123</Text>
+
+			<DropDownPicker
+				items={this.state.list}
+				containerStyle={{ height: 40 }}
+				onChangeItem={item => console.log(item.label, item.value)}
+			/>
 		</View >
 	}
 }
-
-const styles = StyleSheet.create({
-	viewView: {
-		backgroundColor: "#fff",
-		flex: 1,
-	},
-	group1702View: {
-		backgroundColor: "transparent",
-		alignItems: "center",
-	},
-	group1701Image: {
-		// backgroundColor: "blue",
-		resizeMode: "cover",
-		borderRadius: 60,
-		// marginTop: -15,
-		// marginLeft: -15,
-		width: 120,
-		height: 120,
-	},
-	brandShopText: {
-		backgroundColor: "transparent",
-		color: "rgb(45, 45, 45)",
-		fontSize: 25,
-		fontStyle: "normal",
-		fontWeight: "normal",
-		textAlign: "right",
-		alignSelf: "stretch",
-		marginBottom: 7,
-	},
-	shoppingMadnessText: {
-		color: "rgb(45, 45, 45)",
-		fontSize: 12,
-		fontStyle: "normal",
-		fontWeight: "normal",
-		textAlign: "right",
-		backgroundColor: "transparent",
-	},
-})

@@ -62,7 +62,7 @@ export default function HomeScreen({ navigation }) {
       },
       {
         text: t("cam"), onPress: async () => {
-          img = awaitImagePicker.launchImageLibraryAsync({
+          img = await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
             aspect: [4, 4],
@@ -194,13 +194,13 @@ export default function HomeScreen({ navigation }) {
   return (
     <View style={{ flex: 1, backgroundColor: Colors.WHITE }}>
       <CustomHeader title="Home" left="back" isHome={true} navigation={navigation} />
-      <View style={{ flex: 1, alignItems: 'center', }}>
+      <View style={{ flex: 1, alignItems: 'center', paddingLeft: 30, borderRadius: 12, paddingRight: 30 }}>
         <ScrollView
-          style={{ width: "100%", flex: 1, paddingLeft: 30, borderRadius: 12, paddingRight: 30 }}
+          style={{ width: "100%", flex: 1 }}
           contentContainerStyle={{ flexGrow: 1, paddingBottom: 200, paddingTop: 100, justifyContent: "center", alignItems: "center" }}
         >
           <Text
-            style={{ width: "100%", fontSize: 24, color: Colors.BGreen, fontFamily: "Poppins_400Regular" }}>{t("contact")}</Text>
+            style={styles.pagetitle}>{t("contact")}</Text>
 
           <TextInput
             value={cur}
@@ -208,7 +208,7 @@ export default function HomeScreen({ navigation }) {
             placeholder={t("title")}
             onChangeText={r => { setCur(r) }}
             placeholderTextColor="#000"
-            style={{ width: "100%", marginTop: 20, backgroundColor: Colors.BGray, borderRadius: 24, paddingRight: 20, paddingTop: 20, paddingBottom: 20, paddingLeft: 20 }}
+            style={styles.normalInput}
           />
           <TextInput
             value={desc}
@@ -216,7 +216,8 @@ export default function HomeScreen({ navigation }) {
             placeholder={t("msg")}
             onChangeText={r => { setDesc(r) }}
             placeholderTextColor="#000"
-            style={{ width: "100%", marginTop: 20, marginBottom: 20, height: 200, backgroundColor: Colors.BGray, borderRadius: 24, paddingRight: 20, paddingTop: 20, paddingLeft: 20 }}
+            height={200}
+            style={styles.normalInput}
           />
           <ScrollView horizontal style={{ zIndex: 3 }} contentContainerStyle={{ height: images.length > 0 ? 100 : 0 }}>
             {images.map((item, index) => {
@@ -232,7 +233,7 @@ export default function HomeScreen({ navigation }) {
             onPress={pickImage}
             style={{ flexDirection: "row", height: 64, marginTop: 20, backgroundColor: Colors.BGreen, width: "100%", borderRadius: 12, justifyContent: "center", alignItems: "center" }}>
             <Feather name="image" size={24} color="#fff" />
-            <Text style={{ marginLeft: 12, color: "#fff", fontSize: 24 }}>{images.length > 0 ? t("addphotos") : t("attphotos")}</Text>
+            <Text style={styles.buttonTitle}>{images.length > 0 ? t("addphotos") : t("attphotos")}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
@@ -293,7 +294,7 @@ export default function HomeScreen({ navigation }) {
             }}
             style={{ flexDirection: "row", height: 64, marginTop: 20, backgroundColor: Colors.BGreen, width: "100%", borderRadius: 12, justifyContent: "center", alignItems: "center" }}>
             {loading ? <ActivityIndicator size={24} color={Colors.WHITE} /> : <Feather name="check" size={24} color={Colors.WHITE} />}
-            <Text style={{ marginLeft: 12, color: Colors.WHITE, fontSize: 24 }}>{t("send")}</Text>
+            <Text style={styles.buttonTitle}>{t("send")}</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>

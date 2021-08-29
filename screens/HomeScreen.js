@@ -1,10 +1,10 @@
 import * as React from 'react';
 import CustomHeader from '../components/CHeader'
-import { Text, View, SafeAreaView, Image as OldImage, RefreshControl, ActivityIndicator, TouchableOpacity, TextInput, Dimensions, ScrollView, Alert, Linking } from 'react-native'
+import { Text, View, SafeAreaView, Image as OldImage, RefreshControl, ActivityIndicator, TouchableOpacity, TextInput, Dimensions, ScrollView, Alert, Share } from 'react-native'
 import { StackActions } from '@react-navigation/native';
 import Fonts from '../constants/Fonts';
 import styles, { SIZES } from '../constants/Style';
-import { Feather, FontAwesome5, Ionicons } from '@expo/vector-icons';
+import { Feather, FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 import { get, post, remove, patch, baseurl } from '../network';
 import Swiper from 'react-native-swiper'
@@ -12,6 +12,8 @@ import { rdate } from '../components/Methods';
 import { Image } from "react-native-expo-image-cache";
 import { mystore } from '../components/Redux';
 import { t } from '../language';
+import * as Linking from 'expo-linking';
+import * as Sharing from 'expo-sharing';
 
 const width = Dimensions.get("screen").width
 
@@ -32,21 +34,23 @@ export default function HomeScreen({ navigation }) {
       get('/offers/likes')
         .then((res) => {
           let mar = []
-          if (res.data.lenght > 0) {
-            res.data.forEach(e => {
-              let fav = false
-              res.likes.forEach(x => {
-                if (x.offer == e._id) {
-                  fav = true
-                }
+          if (res.ok) {
+            if (res.data.length > 0) {
+              res.data.forEach(e => {
+                let fav = false
+                res.likes.forEach(x => {
+                  if (x.offer == e._id) {
+                    fav = true
+                  }
+                });
+                e.fav = fav
+                mar.push(e)
               });
-              e.fav = fav
-              mar.push(e)
-            });
-            setData(mar)
-            setFullData(mar)
-          } else {
+              setData(mar)
+              setFullData(mar)
+            } else {
 
+            }
           }
           setLoading(false)
           // console.log(data)
@@ -54,7 +58,7 @@ export default function HomeScreen({ navigation }) {
     } else {
       get('/offers')
         .then((res) => {
-          if (res.data.lenght > 0) {
+          if (res.data.length > 0) {
             setData(res.data)
             setFullData(res.data)
           }
@@ -116,7 +120,7 @@ export default function HomeScreen({ navigation }) {
           borderColor: Colors.BGray,
           borderTopWidth: 1,
           borderBottomWidth: 1,
-          paddingLeft: global.token == "" ? 0 : 15,
+          paddingLeft: global.token == "" ? 0 : 0,
           paddingRight: 15,
           backgroundColor: Colors.WHITE
         }}>
@@ -140,44 +144,8 @@ export default function HomeScreen({ navigation }) {
             />
             <View style={{ flex: 1, marginLeft: 15 }}>
               <Text style={{ fontSize: 12, color: Colors.DGray, textAlign: "left" }}>{rdate(offer.created)} {offer.user.vip ? <FontAwesome5 name="crown" /> : ""}{offer.user.vip ? " 🇺🇸" : ""} </Text>
-              <Text style={{ fontSize: 16, textAlign: "left" }}>{offer.user.name}</Text>
+              <Text style={{ fontSize: 16, textAlign: "left", fontFamily: t("regular"), marginTop: 5 }}>{offer.user.name}</Text>
             </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              if (fave == 1) {
-                setFav(2)
-                remove("/likes/" + offer._id).then(r => {
-                  if (r.ok == true) {
-                    setFav(0)
-                    offer.fav = false
-                  } else {
-                    setFav(1)
-                  }
-                })
-              }
-              if (fave == 0) {
-                setFav(2)
-                post("/likes", { offer: offer._id }).then(r => {
-                  if (r.ok == true) {
-                    setFav(1)
-                    offer.fav = true
-                  } else {
-                    setFav(0)
-                  }
-                })
-              }
-            }}
-            style={{ display: global.token == "" ? "none" : "flex" }}
-          >
-            {
-              fave == 1 ?
-                <Ionicons name="heart" size={32} style={{ borderRadius: 24, marginRight: 15 }} />
-                : fave == 2 ?
-                  <ActivityIndicator size={32} style={{ borderRadius: 24, marginRight: 15 }} />
-                  :
-                  <Ionicons name="heart-outline" size={32} style={{ borderRadius: 24, marginRight: 15 }} />
-            }
           </TouchableOpacity>
         </View>
         <TouchableOpacity
@@ -201,7 +169,7 @@ export default function HomeScreen({ navigation }) {
         </TouchableOpacity>
         <View style={{
           width,
-          height: 72,
+          // height: 72,
           // justifyContent: "center",
           // alignItems: "center",
           // flexDirection: "row",
@@ -209,8 +177,68 @@ export default function HomeScreen({ navigation }) {
           borderColor: Colors.BGray,
           borderTopWidth: 1,
         }}>
-          <Text style={{ fontSize: 20, marginLeft: 10, marginRight: 10, marginTop: 5, flex: 1 }}>{price + " " + offer.cur}</Text>
-          <Text style={{ fontSize: 16, marginLeft: 10, marginRight: 10, marginTop: 5, flex: 1 }}>{desc}</Text>
+          <View style={{ flexDirection: "row", marginTop: 5 }}>
+            <TouchableOpacity
+              onPress={() => {
+                if (fave == 1) {
+                  setFav(2)
+                  remove("/likes/" + offer._id).then(r => {
+                    if (r.ok == true) {
+                      setFav(0)
+                      offer.fav = false
+                    } else {
+                      setFav(1)
+                    }
+                  })
+                }
+                if (fave == 0) {
+                  setFav(2)
+                  post("/likes", { offer: offer._id }).then(r => {
+                    if (r.ok == true) {
+                      setFav(1)
+                      offer.fav = true
+                    } else {
+                      setFav(0)
+                    }
+                  })
+                }
+              }}
+              style={{ display: global.token == "" ? "none" : "flex" }}
+            >
+              {
+                fave == 1 ?
+                  <Ionicons name="heart" size={32} style={{ borderRadius: 24, marginLeft: 10 }} />
+                  : fave == 2 ?
+                    <ActivityIndicator size={32} style={{ borderRadius: 24, marginLeft: 10 }} />
+                    :
+                    <Ionicons name="heart-outline" size={32} style={{ borderRadius: 24, marginLeft: 10 }} />
+              }
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                const link = Linking.createURL('/Offer', {
+                  queryParams: { id: '' + offer._id },
+                })
+                console.log(link)
+                Share.share({message:`Offer link: ${link} \n App link: ${"APP LINK"}`})
+                // Linking.openURL(link)
+              }}
+              style={{}}
+            >
+              <Feather name="share-2" size={32} style={{ borderRadius: 24, marginLeft: 15 }} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Offer", { offer: offer })
+              }}
+              style={{ display: "none" }}
+            >
+              <MaterialCommunityIcons name="message-text-outline" size={32} style={{ borderRadius: 24, marginLeft: 15 }} />
+            </TouchableOpacity>
+            <View />
+          </View>
+          <Text style={{ fontSize: 20, marginLeft: 10, marginRight: 10, marginTop: 5, flex: 1, fontFamily: t("regular") }}>{price + " " + t(offer.cur)}</Text>
+          <Text style={{ fontSize: 16, marginLeft: 10, marginRight: 10, marginTop: 5, flex: 1, fontFamily: t("regular") }}>{desc}</Text>
         </View>
       </View>
     )

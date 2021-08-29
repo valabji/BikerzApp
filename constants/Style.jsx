@@ -65,6 +65,29 @@ export default StyleSheet.create({
     color: Colors.WHITE,
     fontSize: 24,
   },
+
+  normalText: {
+    fontFamily: t("regular"),
+    color: Colors.BLACK,
+    fontSize: 14,
+  },
+
+  ItemText: {
+    fontFamily: t("regular"),
+    color: Colors.BLACK,
+    fontSize: 14,
+    writingDirection: I18nManager.isRTL ? "rtl" : "ltr",
+    marginTop: 10,
+    marginLeft: 10, marginRight: 10,
+  },
+
+  noDataText: {
+    fontFamily: t("regular"),
+    color: Colors.BLACK,
+    fontSize: 14,
+    marginTop: 10,
+  },
+
   shadow: {
     shadowColor: "#000",
     shadowOffset: {
@@ -83,6 +106,7 @@ export default StyleSheet.create({
     color: Colors.BLACK,
     fontSize: SIZES.FONT2,
     fontFamily: t("regular"),
+    writingDirection: t("ltr"),
     // backgroundColor:"red",
     flex: 1,
     // paddingVertical: SIZES.PADDING * 0.5,
@@ -93,6 +117,7 @@ export default StyleSheet.create({
     height: 50,
     backgroundColor: Colors.BGray,
     borderColor: Colors.BLACK,
+    // writingDirection: I18nManager.isRTL ? "rtl" : "ltr",
     // borderWidth: StyleSheet.hairlineWidth,
     alignItems: "center",
     paddingLeft: 15,
@@ -109,6 +134,29 @@ export default StyleSheet.create({
     elevation: 1,
   },
 
+  PhoneContainer: {
+    marginBottom: SIZES.PADDING * 2,
+    // flexDirection: "row-reverse",
+    // height: 60,
+    width: "100%",
+    backgroundColor: Colors.BGray,
+    borderColor: Colors.BLACK,
+    // writingDirection: I18nManager.isRTL ? "rtl" : "ltr",
+    // borderWidth: StyleSheet.hairlineWidth,
+    alignItems: "center",
+    // paddingLeft: 15,
+    borderRadius: 25,
+
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.18,
+    shadowRadius: 1.0,
+
+    elevation: 1,
+  },
   search: {
     padding: 20,
     paddingTop: 15,
@@ -178,11 +226,13 @@ export default StyleSheet.create({
     // fontWeight: "700",
     fontFamily: t("bold"),
     letterSpacing: 1,
+    writingDirection: I18nManager.isRTL ? "rtl" : "ltr",
     marginBottom: SIZES.BASE,
   },
   title2: {
     color: Colors.BLACK,
     fontSize: SIZES.FONT2,
+    writingDirection: I18nManager.isRTL ? "rtl" : "ltr",
     fontFamily: t("regular"),
     // fontWeight: "400",
     letterSpacing: 1,
@@ -1534,7 +1584,7 @@ export default StyleSheet.create({
   },
   solimanAhmedText: {
     color: "white",
-    fontFamily: "Poppins_500Medium",
+    fontFamily: t("bold"),
     fontSize: 16,
     fontStyle: "normal",
     fontWeight: "normal",

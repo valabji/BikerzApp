@@ -3,6 +3,7 @@
     "name": "Bikerz",
     "slug": "Bikerz",
     "privacy": "public",
+    "scheme": "bikerz",
     "platforms": [
       "ios",
       "android",

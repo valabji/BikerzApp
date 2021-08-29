@@ -116,7 +116,7 @@ export async function remove(url) {
 
 
 function nlog(msg) {
-    // console.log(msg)
+    console.log(msg)
 }
 
 function rlog(url, req, res) {

@@ -131,7 +131,7 @@ export default function HomeScreen({ navigation }) {
               {...{ preview, uri }}
             />
             <View style={{ flex: 1, marginLeft: 15 }}>
-              <Text style={{ fontSize: 12, color: Colors.DGray, textAlign: "left" }}>{rdate(offer.created)} {offer.user.vip ? <FontAwesome5 name="crown" /> : ""}{offer.user.vip ? " VIP" : ""} </Text>
+              <Text style={{ fontSize: 12, color: Colors.DGray, textAlign: "left" }}>{rdate(offer.created)} {offer.user.vip ? <FontAwesome5 name="crown" /> : ""}{offer.user.vip ? " 🇺🇸" : ""} </Text>
               <Text style={{ fontSize: 16, textAlign: "left" }}>{offer.user.name}</Text>
             </View>
           </TouchableOpacity>
